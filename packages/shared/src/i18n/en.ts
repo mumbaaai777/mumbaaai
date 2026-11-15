@@ -156,6 +156,7 @@ export const en = {
     showLink: 'Business Connect board',
   },
   contact: { title: 'Contact MumbaAai', hint: 'Advertise, partner or send news', call: 'Call', whatsapp: 'WhatsApp' },
+  paper: { title: 'Mumbaa Aai News', tagline: 'Your city\'s paper, in your language', briefs: 'In brief', opinion: 'Opinion', source: 'Source', more: 'Read full story', less: 'Show less', empty: 'No edition for this day yet.', prev: 'Previous day', next: 'Next day', today: 'Today\'s paper', cta: 'Read today\'s edition', sections: { city: 'City', transport: 'Transport', civic: 'Civic', business: 'Business', entertainment: 'Entertainment', sports: 'Sports', weather: 'Weather', opinion: 'Opinion' } },
   travel: {
     title: 'Travel',
     trains: 'Local trains',

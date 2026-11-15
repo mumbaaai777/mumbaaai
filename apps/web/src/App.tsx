@@ -15,6 +15,7 @@ const Radio = lazy(() => import('./pages/Radio'));
 const Jobs = lazy(() => import('./pages/Jobs'));
 const Ask = lazy(() => import('./pages/Ask'));
 const Business = lazy(() => import('./pages/Business'));
+const Paper = lazy(() => import('./pages/Paper'));
 
 function Routed() {
   const location = useLocation();
@@ -29,6 +30,7 @@ function Routed() {
             <Route path="/jobs" element={<Jobs />} />
             <Route path="/ask" element={<Ask />} />
             <Route path="/business" element={<Business />} />
+            <Route path="/paper" element={<Paper />} />
             <Route path="*" element={<Home />} />
           </Routes>
         </AnimatePresence>

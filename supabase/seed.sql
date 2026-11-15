@@ -25,3 +25,6 @@ insert into public.rate_card (id, placement, pricing_model, price_inr, notes) va
 insert into public.rate_card (id, placement, pricing_model, price_inr, notes) values ('rc-6', 'jobs_sponsored', 'flat_daily', 500, 'Pinned job, flat per day') on conflict (id) do nothing;
 insert into public.rate_card (id, placement, pricing_model, price_inr, notes) values ('rc-7', 'ask_aai_sponsored', 'cpc', 10, 'Labelled card under relevant answers') on conflict (id) do nothing;
 insert into public.rate_card (id, placement, pricing_model, price_inr, notes) values ('rc-8', 'home_banner', 'flat_daily', 1500, 'Takeover, one advertiser per zone per day') on conflict (id) do nothing;
+insert into public.rate_card (id, placement, pricing_model, price_inr, notes) values ('rc-p1', 'paper_full', 'flat_daily', 2500, 'Full-width ad in the daily e-paper') on conflict (id) do nothing;
+insert into public.rate_card (id, placement, pricing_model, price_inr, notes) values ('rc-p2', 'paper_half', 'flat_daily', 1200, 'Half-column ad box in the e-paper') on conflict (id) do nothing;
+insert into public.rate_card (id, placement, pricing_model, price_inr, notes) values ('rc-p3', 'paper_strip', 'flat_daily', 600, 'Thin strip between stories') on conflict (id) do nothing;

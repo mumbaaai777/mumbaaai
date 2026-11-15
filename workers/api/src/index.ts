@@ -6,6 +6,9 @@ import { FEEDS, parseFeed, type Headline } from './rss.ts';
 import { buildSystemPrompt } from './prompt.ts';
 
 export interface Env {
+  /** set automatically in Supabase Edge Functions; used to check the caller is an admin */
+  SUPABASE_URL?: string;
+  SUPABASE_ANON_KEY?: string;
   GEMINI_API_KEY?: string;
   GEMINI_MODEL?: string;
   GEMINI_FALLBACK_MODEL?: string;
@@ -154,6 +157,54 @@ async function handleAsk(req: Request, env: Env): Promise<Response> {
   return json({ answer: text, model: usedModel, lang }, 200, req, env);
 }
 
+// ---------- /translate (admins only) ----------
+const LANGS: Record<string, string> = { en: 'English', hi: 'Hindi (Devanagari)', mr: 'Marathi (Devanagari)' };
+async function isAdminCaller(req: Request, env: Env): Promise<boolean> {
+  const auth = req.headers.get('Authorization');
+  if (!auth || !env.SUPABASE_URL || !env.SUPABASE_ANON_KEY) return false;
+  const res = await fetch(`${env.SUPABASE_URL}/rest/v1/rpc/is_admin`, {
+    method: 'POST',
+    headers: { apikey: env.SUPABASE_ANON_KEY, Authorization: auth, 'Content-Type': 'application/json' },
+    body: '{}',
+  });
+  return res.ok && (await res.json()) === true;
+}
+
+async function handleTranslate(req: Request, env: Env): Promise<Response> {
+  if (!env.GEMINI_API_KEY) return json({ error: 'ai_not_configured' }, 503, req, env);
+  if (!(await isAdminCaller(req, env))) return json({ error: 'admins_only' }, 401, req, env);
+  let body: { texts?: Record<string, string>; from?: string; to?: string[] };
+  try {
+    body = await req.json();
+  } catch {
+    return json({ error: 'invalid_json' }, 400, req, env);
+  }
+  const texts = Object.fromEntries(Object.entries(body.texts ?? {}).filter(([, v]) => typeof v === 'string' && v.trim()).slice(0, 60));
+  const total = Object.values(texts).join('').length;
+  const to = (body.to ?? ['hi', 'mr']).filter((l) => LANGS[l]);
+  if (!Object.keys(texts).length || !to.length) return json({ error: 'nothing_to_translate' }, 400, req, env);
+  if (total > 12000) return json({ error: 'too_long' }, 413, req, env);
+  const prompt = [
+    `You are the translation desk of "Mumbaa Aai News", a Mumbai newspaper. Translate every value of the JSON object below into: ${to.map((l) => `${l} = ${LANGS[l]}`).join(', ')}.`,
+    'Write natural newspaper style that Mumbaikars use (Marathi as in Loksatta/Maharashtra Times, Hindi as in Navbharat Times). Keep names of people, places, stations and brands recognisable. Keep numbers, dates and paragraph breaks. Do not add or remove facts.',
+    `Return only JSON shaped {${to.map((l) => `"${l}": {same keys}`).join(', ')}}.`,
+    JSON.stringify(texts),
+  ].join('\n\n');
+  const payload = { contents: [{ role: 'user', parts: [{ text: prompt }] }], generationConfig: { temperature: 0.2, responseMimeType: 'application/json', maxOutputTokens: 8000 } };
+  const primary = env.GEMINI_MODEL || DEFAULT_MODEL;
+  const fallback = env.GEMINI_FALLBACK_MODEL || DEFAULT_FALLBACK;
+  let res = await callGemini(primary, env.GEMINI_API_KEY, payload);
+  if ((res.status === 429 || res.status === 503) && fallback !== primary) res = await callGemini(fallback, env.GEMINI_API_KEY, payload);
+  if (!res.ok) return json({ error: res.status === 429 ? 'upstream_rate_limited' : 'upstream_error' }, res.status === 429 ? 429 : 502, req, env);
+  const data = (await res.json()) as { candidates?: { content?: { parts?: { text?: string }[] } }[] };
+  const raw = (data.candidates?.[0]?.content?.parts ?? []).map((p) => p.text ?? '').join('');
+  try {
+    return json({ translations: JSON.parse(raw.replace(/^```json\s*|```$/g, '')) }, 200, req, env);
+  } catch {
+    return json({ error: 'bad_ai_output' }, 502, req, env);
+  }
+}
+
 // ---------- /news ----------
 async function fetchFeed(feed: (typeof FEEDS)[number]): Promise<Headline[]> {
   const ctrl = new AbortController();
@@ -237,6 +288,7 @@ export default {
     try {
       if (path === '/ask' && req.method === 'POST') return await handleAsk(req, env);
       if (path === '/news' && req.method === 'GET') return await handleNews(req, env, ctx);
+      if (path === '/translate' && req.method === 'POST') return await handleTranslate(req, env);
       if (path === '/health' || path === '/')
         return json(
           { ok: true, service: 'mumbaaai-api', ai: Boolean(env.GEMINI_API_KEY), model: env.GEMINI_MODEL || DEFAULT_MODEL, fallback: env.GEMINI_FALLBACK_MODEL || DEFAULT_FALLBACK },

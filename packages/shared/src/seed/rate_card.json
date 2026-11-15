@@ -54,5 +54,26 @@
     "pricing_model": "flat_daily",
     "price_inr": 1500,
     "notes": "Takeover, one advertiser per zone per day"
+  },
+  {
+    "id": "rc-p1",
+    "placement": "paper_full",
+    "pricing_model": "flat_daily",
+    "price_inr": 2500,
+    "notes": "Full-width ad in the daily e-paper"
+  },
+  {
+    "id": "rc-p2",
+    "placement": "paper_half",
+    "pricing_model": "flat_daily",
+    "price_inr": 1200,
+    "notes": "Half-column ad box in the e-paper"
+  },
+  {
+    "id": "rc-p3",
+    "placement": "paper_strip",
+    "pricing_model": "flat_daily",
+    "price_inr": 600,
+    "notes": "Thin strip between stories"
   }
 ]

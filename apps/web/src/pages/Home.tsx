@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Newspaper } from 'lucide-react';
 import { greetingKey, istNow } from '@mumbaaai/shared';
 import { useI18n } from '../lib/i18n';
 import { Page, Stagger, Item, LetterReveal } from '../components/motion';
@@ -41,7 +43,16 @@ export default function Home() {
           <MiniPlayer />
           <AdSlot placement="home_banner" variant="banner" />
         </Item>
-        <Item>
+        <Item className="space-y-5">
+          <Link to="/paper" className="card flex items-center gap-4 p-4 transition hover:-translate-y-0.5">
+            <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-navy text-marigold"><Newspaper size={24} /></span>
+            <span className="min-w-0 flex-1">
+              <span className="eyebrow">{t.paper.today}</span>
+              <span className="block text-lg font-bold text-ink" style={{ fontFamily: 'Georgia, "Noto Serif Devanagari", serif' }}>{t.paper.title}</span>
+              <span className="block text-sm text-muted">{t.paper.cta}</span>
+            </span>
+            <span className="text-2xl text-marigold-ink">→</span>
+          </Link>
           <NewsList limit={8} />
         </Item>
       </Stagger>

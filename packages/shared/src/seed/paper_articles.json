@@ -1,0 +1,126 @@
+[
+  {
+    "id": "sample-paper-01",
+    "edition_date": "2026-11-15",
+    "layout": "lead",
+    "section": "transport",
+    "position": 1,
+    "headline": {
+      "en": "Sample: Weekend mega block on Central line, plan your Sunday travel",
+      "hi": "नमूना: सेंट्रल लाइन पर वीकेंड मेगा ब्लॉक, रविवार की यात्रा प्लान करें",
+      "mr": "नमुना: मध्य रेल्वेवर वीकेंड मेगा ब्लॉक, रविवारचा प्रवास आखा"
+    },
+    "standfirst": {
+      "en": "This is a sample story to show the lead layout. Your editors replace it from admin.",
+      "hi": "यह लीड लेआउट दिखाने के लिए नमूना ख़बर है। आपके संपादक इसे एडमिन से बदलेंगे।",
+      "mr": "लीड लेआउट दाखवण्यासाठी ही नमुना बातमी आहे. तुमचे संपादक ती अॅडमिनमधून बदलतील."
+    },
+    "body": {
+      "en": "Write the full story here. Paragraphs are separated by a blank line.\n\nThe lead layout shows a big headline, photo and the first paragraphs.",
+      "hi": "पूरी ख़बर यहाँ लिखें।",
+      "mr": "संपूर्ण बातमी इथे लिहा."
+    },
+    "image_url": null,
+    "byline": "Mumbaa Aai News Desk",
+    "source_name": null,
+    "source_url": null,
+    "is_auto": false,
+    "status": "published",
+    "created_at": "2026-11-15T03:00:00.000Z",
+    "sample": true
+  },
+  {
+    "id": "sample-paper-02",
+    "edition_date": "2026-11-15",
+    "layout": "standard",
+    "section": "civic",
+    "position": 2,
+    "headline": {
+      "en": "Sample: Ward office launches WhatsApp complaints line",
+      "hi": "नमूना: वार्ड ऑफ़िस ने शुरू की WhatsApp शिकायत लाइन",
+      "mr": "नमुना: वॉर्ड ऑफिसची WhatsApp तक्रार लाइन सुरू"
+    },
+    "standfirst": {
+      "en": "Standard layout: headline, short intro and text.",
+      "hi": "स्टैंडर्ड लेआउट: हेडलाइन, छोटा परिचय और ख़बर।",
+      "mr": "स्टँडर्ड लेआउट: मथळा, छोटी ओळख आणि बातमी."
+    },
+    "body": null,
+    "image_url": null,
+    "byline": "Staff reporter",
+    "source_name": null,
+    "source_url": null,
+    "is_auto": false,
+    "status": "published",
+    "created_at": "2026-11-15T03:10:00.000Z",
+    "sample": true
+  },
+  {
+    "id": "sample-paper-03",
+    "edition_date": "2026-11-15",
+    "layout": "ad_half",
+    "section": "city",
+    "position": 3,
+    "headline": {
+      "en": "Ad space"
+    },
+    "standfirst": null,
+    "body": null,
+    "image_url": null,
+    "byline": null,
+    "source_name": null,
+    "source_url": null,
+    "is_auto": false,
+    "status": "published",
+    "created_at": "2026-11-15T03:15:00.000Z",
+    "sample": true
+  },
+  {
+    "id": "sample-paper-04",
+    "edition_date": "2026-11-15",
+    "layout": "brief",
+    "section": "weather",
+    "position": 4,
+    "headline": {
+      "en": "Sample: Clear skies, AQI moderate across the suburbs",
+      "hi": "नमूना: आसमान साफ़, उपनगरों में AQI मध्यम",
+      "mr": "नमुना: आकाश निरभ्र, उपनगरांत AQI मध्यम"
+    },
+    "standfirst": null,
+    "body": null,
+    "image_url": null,
+    "byline": null,
+    "source_name": null,
+    "source_url": null,
+    "is_auto": false,
+    "status": "published",
+    "created_at": "2026-11-15T03:20:00.000Z",
+    "sample": true
+  },
+  {
+    "id": "sample-paper-05",
+    "edition_date": "2026-11-15",
+    "layout": "opinion",
+    "section": "opinion",
+    "position": 5,
+    "headline": {
+      "en": "Sample: Why every station needs a lift that works",
+      "hi": "नमूना: हर स्टेशन को चालू लिफ़्ट क्यों चाहिए",
+      "mr": "नमुना: प्रत्येक स्थानकाला चालू लिफ्ट का हवी"
+    },
+    "standfirst": {
+      "en": "Opinion layout with a columnist byline.",
+      "hi": "कॉलमिस्ट के नाम के साथ ओपिनियन लेआउट।",
+      "mr": "स्तंभलेखकाच्या नावासह मत लेआउट."
+    },
+    "body": null,
+    "image_url": null,
+    "byline": "Guest columnist",
+    "source_name": null,
+    "source_url": null,
+    "is_auto": false,
+    "status": "published",
+    "created_at": "2026-11-15T03:25:00.000Z",
+    "sample": true
+  }
+]

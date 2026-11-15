@@ -19,6 +19,9 @@ export const AD_PLACEMENTS = [
   'radio_preroll_audio',
   'jobs_sponsored',
   'ask_aai_sponsored',
+  'paper_full',
+  'paper_half',
+  'paper_strip',
 ] as const;
 export type AdPlacement = (typeof AD_PLACEMENTS)[number];
 
@@ -182,6 +185,33 @@ export interface BusinessListing {
   website?: string | null;
   status: ModerationStatus;
   featured_on_air?: boolean;
+  created_at: string;
+  sample?: boolean;
+}
+
+// ---------- Mumbaa Aai News (newspaper) ----------
+/** Ready-made layouts an editor picks for every item on the paper. ad_* layouts pull an active ad of the matching paper_* placement. */
+export const PAPER_LAYOUTS = ['lead', 'standard', 'photo', 'brief', 'opinion', 'ad_full', 'ad_half', 'ad_strip'] as const;
+export type PaperLayout = (typeof PAPER_LAYOUTS)[number];
+export const PAPER_SECTIONS = ['city', 'transport', 'civic', 'business', 'entertainment', 'sports', 'weather', 'opinion'] as const;
+export type PaperSection = (typeof PAPER_SECTIONS)[number];
+export type PaperLangText = { en?: string | null; hi?: string | null; mr?: string | null };
+export interface PaperArticle {
+  id: string;
+  edition_date: string; // YYYY-MM-DD (IST)
+  layout: PaperLayout;
+  section: PaperSection;
+  position: number; // order on the page, lower first
+  headline: PaperLangText;
+  standfirst?: PaperLangText | null;
+  body?: PaperLangText | null;
+  image_url?: string | null;
+  image_caption?: string | null;
+  byline?: string | null;
+  source_name?: string | null; // for digest items: original publisher
+  source_url?: string | null;
+  is_auto?: boolean; // built by the headline digest
+  status: 'draft' | 'published';
   created_at: string;
   sample?: boolean;
 }

@@ -156,6 +156,7 @@ export const hi: Dict = {
     showLink: 'बिज़नेस कनेक्ट बोर्ड',
   },
   contact: { title: 'MumbaAai से संपर्क करें', hint: 'विज्ञापन, पार्टनरशिप या ख़बर भेजें', call: 'कॉल', whatsapp: 'WhatsApp' },
+  paper: { title: 'मुंबा आई न्यूज़', tagline: 'आपके शहर का अख़बार, आपकी भाषा में', briefs: 'संक्षेप में', opinion: 'विचार', source: 'स्रोत', more: 'पूरी ख़बर पढ़ें', less: 'कम दिखाएँ', empty: 'इस दिन का संस्करण अभी नहीं है।', prev: 'पिछला दिन', next: 'अगला दिन', today: 'आज का अख़बार', cta: 'आज का संस्करण पढ़ें', sections: { city: 'शहर', transport: 'यातायात', civic: 'नागरिक', business: 'व्यापार', entertainment: 'मनोरंजन', sports: 'खेल', weather: 'मौसम', opinion: 'विचार' } },
   travel: {
     title: 'सफ़र',
     trains: 'लोकल ट्रेन',

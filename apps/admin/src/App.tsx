@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { HashRouter, NavLink, Navigate, Route, Routes } from 'react-router-dom';
-import { LayoutDashboard, Heart, Megaphone, Briefcase, TriangleAlert, Radio, Mic2, MessageSquareWarning, Handshake, LogOut, ExternalLink, Moon, Sun } from 'lucide-react';
+import { LayoutDashboard, Heart, Megaphone, Briefcase, TriangleAlert, Radio, Mic2, MessageSquareWarning, Handshake, Newspaper as NewspaperIcon, LogOut, ExternalLink, Moon, Sun } from 'lucide-react';
 import { AuthProvider, useAuth, DEMO_EMAIL, DEMO_PASSWORD } from './lib/auth';
 import { asset, isDemo, webUrl } from './lib/data';
 import { Btn, inputCls } from './components/Resource';
 import Dashboard from './pages/Dashboard';
 import Dedications from './pages/Dedications';
+import Newspaper from './pages/Newspaper';
 import { BusinessPage, AdsPage, JobsPage, AlertsPage, SchedulePage, RjPage, ReportsPage } from './pages/Resources';
 
 const NAV = [
@@ -14,6 +15,7 @@ const NAV = [
   { to: '/schedule', label: 'Radio schedule', icon: Radio },
   { to: '/rjs', label: 'RJs', icon: Mic2 },
   { to: '/business', label: 'Business Connect', icon: Handshake },
+  { to: '/paper', label: 'Mumbaa Aai News', icon: NewspaperIcon },
   { to: '/ads', label: 'Ads', icon: Megaphone },
   { to: '/jobs', label: 'Jobs', icon: Briefcase },
   { to: '/alerts', label: 'City alerts', icon: TriangleAlert },
@@ -140,6 +142,7 @@ function Shell() {
             <Route path="/schedule" element={<SchedulePage />} />
             <Route path="/rjs" element={<RjPage />} />
             <Route path="/business" element={<BusinessPage />} />
+            <Route path="/paper" element={<Newspaper />} />
             <Route path="/ads" element={<AdsPage />} />
             <Route path="/jobs" element={<JobsPage />} />
             <Route path="/alerts" element={<AlertsPage />} />
