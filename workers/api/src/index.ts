@@ -90,12 +90,26 @@ interface AskBody {
   zone?: string;
 }
 
-async function callGemini(model: string, apiKey: string, payload: unknown): Promise<Response> {
-  return fetch(`${GEMINI_BASE}/${encodeURIComponent(model)}:generateContent`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
-    body: JSON.stringify(payload),
-  });
+async function callGemini(model: string, apiKey: string, payload: unknown, timeoutMs = 10000): Promise<Response> {
+  try {
+    return await fetch(`${GEMINI_BASE}/${encodeURIComponent(model)}:generateContent`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
+      body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(timeoutMs),
+    });
+  } catch {
+    // timed out or network error: report as 504 so the caller falls back
+    return new Response(JSON.stringify({ error: 'timeout' }), { status: 504 });
+  }
+}
+/** Primary model gets a short time box (it is often overloaded); any failure falls back to the lite model. */
+async function callWithFallback(env: Env, payload: unknown): Promise<{ res: Response; model: string }> {
+  const primary = env.GEMINI_MODEL || DEFAULT_MODEL;
+  const fallback = env.GEMINI_FALLBACK_MODEL || DEFAULT_FALLBACK;
+  const res = await callGemini(primary, env.GEMINI_API_KEY!, payload, 9000);
+  if (res.ok || !fallback || fallback === primary) return { res, model: primary };
+  return { res: await callGemini(fallback, env.GEMINI_API_KEY!, payload, 25000), model: fallback };
 }
 
 async function handleAsk(req: Request, env: Env): Promise<Response> {
@@ -131,14 +145,7 @@ async function handleAsk(req: Request, env: Env): Promise<Response> {
     generationConfig: { temperature: 0.6, maxOutputTokens: 800 },
   };
 
-  const primary = env.GEMINI_MODEL || DEFAULT_MODEL;
-  const fallback = env.GEMINI_FALLBACK_MODEL || DEFAULT_FALLBACK;
-  let usedModel = primary;
-  let res = await callGemini(primary, env.GEMINI_API_KEY, payload);
-  if ((res.status === 429 || res.status === 503) && fallback && fallback !== primary) {
-    usedModel = fallback;
-    res = await callGemini(fallback, env.GEMINI_API_KEY, payload);
-  }
+  const { res, model: usedModel } = await callWithFallback(env, payload);
   if (!res.ok) {
     const detail = await res.text().catch(() => '');
     console.error('gemini_error', usedModel, res.status, detail.slice(0, 500));
@@ -191,10 +198,7 @@ async function handleTranslate(req: Request, env: Env): Promise<Response> {
     JSON.stringify(texts),
   ].join('\n\n');
   const payload = { contents: [{ role: 'user', parts: [{ text: prompt }] }], generationConfig: { temperature: 0.2, responseMimeType: 'application/json', maxOutputTokens: 8000 } };
-  const primary = env.GEMINI_MODEL || DEFAULT_MODEL;
-  const fallback = env.GEMINI_FALLBACK_MODEL || DEFAULT_FALLBACK;
-  let res = await callGemini(primary, env.GEMINI_API_KEY, payload);
-  if ((res.status === 429 || res.status === 503) && fallback !== primary) res = await callGemini(fallback, env.GEMINI_API_KEY, payload);
+  const { res } = await callWithFallback(env, payload);
   if (!res.ok) return json({ error: res.status === 429 ? 'upstream_rate_limited' : 'upstream_error' }, res.status === 429 ? 429 : 502, req, env);
   const data = (await res.json()) as { candidates?: { content?: { parts?: { text?: string }[] } }[] };
   const raw = (data.candidates?.[0]?.content?.parts ?? []).map((p) => p.text ?? '').join('');
