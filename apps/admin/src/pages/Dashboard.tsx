@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import { Heart, Megaphone, Briefcase, MessageSquareWarning } from 'lucide-react';
-import { estimateRevenue, inr, type Ad, type Dedication, type Job, type ListenerReport, type RateCardRow } from '@mumbaaai/shared';
+import { Heart, Megaphone, Briefcase, MessageSquareWarning, Handshake } from 'lucide-react';
+import { estimateRevenue, inr, type Ad, type BusinessListing, type Dedication, type Job, type ListenerReport, type RateCardRow } from '@mumbaaai/shared';
 import { useRows } from '../lib/useRows';
 
 export default function Dashboard() {
@@ -9,9 +9,11 @@ export default function Dashboard() {
   const { rows: jobs } = useRows<Job>('jobs');
   const { rows: reps } = useRows<ListenerReport>('listener_reports');
   const { rows: rate } = useRows<RateCardRow>('rate_card');
+  const { rows: biz } = useRows<BusinessListing>('business_listings');
   const active = ads.filter((a) => a.status === 'active');
   const cards = [
     { to: '/dedications', icon: Heart, label: 'Dedications waiting', value: ded.filter((d) => d.status === 'pending').length, sub: `${ded.filter((d) => d.status === 'scheduled').length} scheduled` },
+    { to: '/business', icon: Handshake, label: 'Business listings to check', value: biz.filter((b) => b.status === 'pending').length, sub: `${biz.filter((b) => b.featured_on_air).length} featured on air` },
     { to: '/ads', icon: Megaphone, label: 'Active ads', value: active.length, sub: `≈ ${inr(active.reduce((s, a) => s + estimateRevenue(a, rate), 0))} earned` },
     { to: '/jobs', icon: Briefcase, label: 'Open jobs', value: jobs.filter((j) => j.status === 'active').length, sub: `${jobs.filter((j) => j.sponsored).length} sponsored` },
     { to: '/reports', icon: MessageSquareWarning, label: 'Reports to review', value: reps.filter((r) => r.status === 'pending').length, sub: 'traffic and train tips' },

@@ -1,18 +1,19 @@
 import { useState } from 'react';
 import { HashRouter, NavLink, Navigate, Route, Routes } from 'react-router-dom';
-import { LayoutDashboard, Heart, Megaphone, Briefcase, TriangleAlert, Radio, Mic2, MessageSquareWarning, LogOut, ExternalLink, Moon, Sun } from 'lucide-react';
+import { LayoutDashboard, Heart, Megaphone, Briefcase, TriangleAlert, Radio, Mic2, MessageSquareWarning, Handshake, LogOut, ExternalLink, Moon, Sun } from 'lucide-react';
 import { AuthProvider, useAuth, DEMO_EMAIL, DEMO_PASSWORD } from './lib/auth';
 import { asset, isDemo, webUrl } from './lib/data';
 import { Btn, inputCls } from './components/Resource';
 import Dashboard from './pages/Dashboard';
 import Dedications from './pages/Dedications';
-import { AdsPage, JobsPage, AlertsPage, SchedulePage, RjPage, ReportsPage } from './pages/Resources';
+import { BusinessPage, AdsPage, JobsPage, AlertsPage, SchedulePage, RjPage, ReportsPage } from './pages/Resources';
 
 const NAV = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/dedications', label: 'Dedications', icon: Heart },
   { to: '/schedule', label: 'Radio schedule', icon: Radio },
   { to: '/rjs', label: 'RJs', icon: Mic2 },
+  { to: '/business', label: 'Business Connect', icon: Handshake },
   { to: '/ads', label: 'Ads', icon: Megaphone },
   { to: '/jobs', label: 'Jobs', icon: Briefcase },
   { to: '/alerts', label: 'City alerts', icon: TriangleAlert },
@@ -120,6 +121,7 @@ function Shell() {
             <Route path="/dedications" element={<Dedications />} />
             <Route path="/schedule" element={<SchedulePage />} />
             <Route path="/rjs" element={<RjPage />} />
+            <Route path="/business" element={<BusinessPage />} />
             <Route path="/ads" element={<AdsPage />} />
             <Route path="/jobs" element={<JobsPage />} />
             <Route path="/alerts" element={<AlertsPage />} />

@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { MapPin, MessageCircle, BadgeCheck } from 'lucide-react';
 import { JOB_TYPES, ZONES, type Job, type JobType, type ZoneId } from '@mumbaaai/shared';
@@ -157,6 +158,14 @@ export default function Jobs() {
           </AnimatePresence>
         </motion.ul>
       )}
+      <Link to="/business" className="card mt-6 flex items-center justify-between gap-3 bg-accent-soft p-4">
+        <span>
+          <span className="eyebrow">{t.business.eyebrow}</span>
+          <span className="block font-semibold text-ink">{t.business.title}</span>
+          <span className="block text-sm text-muted">{t.business.hint}</span>
+        </span>
+        <span className="text-2xl text-marigold-ink">→</span>
+      </Link>
     </Page>
   );
 }

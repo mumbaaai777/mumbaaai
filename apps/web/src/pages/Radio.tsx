@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Pause, Play, Loader2, Volume2, FlaskConical } from 'lucide-react';
 import { brand, currentAndNext, isShowOnAir, sortSchedule, type RadioShow, type RjProfile } from '@mumbaaai/shared';
@@ -150,7 +151,7 @@ export default function Radio() {
           <section className="card p-5">
             <SectionTitle title={t.radio.schedule} right={shows?.some((s) => s.sample) ? <SampleBadge /> : undefined} />
             <ol className="relative">
-              {sortSchedule(shows ?? []).map((s) => {
+              {sortSchedule((shows ?? []).filter((s) => !s.days?.length || s.days.includes(new Date(Date.now() + (330 + new Date().getTimezoneOffset()) * 60000).getDay()))).map((s) => {
                 const on = isShowOnAir(s);
                 return (
                   <li key={s.id} className={`relative flex gap-4 rounded-xl px-3 py-3 ${on ? 'bg-accent-soft' : ''}`}>
@@ -167,6 +168,11 @@ export default function Radio() {
                         {s.rj_name ? `${s.rj_name} · ` : ''}
                         {s.description}
                       </p>
+                      {s.title === 'Mumbaa Business' && (
+                        <Link to="/business" className="mt-1 inline-block text-sm font-semibold text-marigold-ink underline">
+                          {t.business.showLink} →
+                        </Link>
+                      )}
                     </div>
                   </li>
                 );

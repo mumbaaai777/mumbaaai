@@ -39,7 +39,45 @@
     "sample": true
   },
   {
+    "id": "sample-show-10",
+    "title": "Mumbaa Business",
+    "description": "Founders, shop owners and experts. Pitch Ka Minute, plus investors, co-founders and mentors from the Connect board.",
+    "rj_id": "sample-rj-sameer",
+    "rj_name": "RJ Sameer",
+    "start_time": "12:00",
+    "end_time": "13:00",
+    "language": "mixed",
+    "days": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "sort_order": 4,
+    "sample": true
+  },
+  {
     "id": "sample-show-04",
+    "title": "Dopahar Ke Gaane",
+    "description": "Hindi afternoon melodies, news at the top of the hour.",
+    "rj_id": "sample-rj-nisha",
+    "rj_name": "RJ Nisha",
+    "start_time": "13:00",
+    "end_time": "14:00",
+    "language": "hi",
+    "days": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "sort_order": 5,
+    "sample": true
+  },
+  {
+    "id": "sample-show-11",
     "title": "Dopahar Ke Gaane",
     "description": "Hindi afternoon melodies, news at the top of the hour.",
     "rj_id": "sample-rj-nisha",
@@ -47,8 +85,11 @@
     "start_time": "12:00",
     "end_time": "14:00",
     "language": "hi",
-    "days": [],
-    "sort_order": 4,
+    "days": [
+      0,
+      6
+    ],
+    "sort_order": 6,
     "sample": true
   },
   {
@@ -61,7 +102,7 @@
     "end_time": "16:00",
     "language": "mr",
     "days": [],
-    "sort_order": 5,
+    "sort_order": 7,
     "sample": true
   },
   {
@@ -74,7 +115,7 @@
     "end_time": "20:00",
     "language": "mixed",
     "days": [],
-    "sort_order": 6,
+    "sort_order": 8,
     "sample": true
   },
   {
@@ -87,7 +128,7 @@
     "end_time": "22:00",
     "language": "mixed",
     "days": [],
-    "sort_order": 7,
+    "sort_order": 9,
     "sample": true
   },
   {
@@ -100,7 +141,7 @@
     "end_time": "01:00",
     "language": "hi",
     "days": [],
-    "sort_order": 8,
+    "sort_order": 10,
     "sample": true
   },
   {
@@ -113,7 +154,7 @@
     "end_time": "05:00",
     "language": "mixed",
     "days": [],
-    "sort_order": 9,
+    "sort_order": 11,
     "sample": true
   }
 ]

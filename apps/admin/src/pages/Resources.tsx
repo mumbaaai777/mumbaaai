@@ -1,4 +1,4 @@
-import { AD_CATEGORIES, AD_PLACEMENTS, AD_STATUSES, JOB_TYPES, PRICING_MODELS, ZONES, AdCard, ctr, inr, type Ad, type CityAlert, type Job, type ListenerReport, type RadioShow, type RjProfile } from '@mumbaaai/shared';
+import { BIZ_ROLES, BIZ_STAGES, type BusinessListing, AD_CATEGORIES, AD_PLACEMENTS, AD_STATUSES, JOB_TYPES, PRICING_MODELS, ZONES, AdCard, ctr, inr, type Ad, type CityAlert, type Job, type ListenerReport, type RadioShow, type RjProfile } from '@mumbaaai/shared';
 import { dictionaries } from '@mumbaaai/shared';
 const en = dictionaries.en;
 import { ResourcePage, Badge, type Field } from '../components/Resource';
@@ -181,6 +181,41 @@ export function ReportsPage() {
         { key: 'message', label: 'Message', className: 'max-w-sm' },
         { key: 'kind', label: 'Kind' },
         { key: 'status', label: 'Status', render: (r) => <Badge tone={r.status === 'approved' ? 'good' : r.status === 'pending' ? 'warn' : 'bad'}>{r.status}</Badge> },
+      ]}
+    />
+  );
+}
+
+export function BusinessPage() {
+  return (
+    <ResourcePage<BusinessListing & Record<string, unknown>>
+      table="business_listings"
+      title="Business Connect"
+      description="Listings for the Mumbaa Business show. Check every listing before approving (no fees-for-funding, real founder, working WhatsApp). Tick Featured to have the RJ read it on air."
+      listOptions={{ order: { column: 'created_at', ascending: false } }}
+      searchKeys={['name', 'founder', 'sector']}
+      fields={[
+        { key: 'status', label: 'Status', type: 'select', options: opt(['pending', 'approved', 'rejected']), required: true, half: true },
+        { key: 'featured_on_air', label: 'On air', type: 'checkbox', help: 'Featured on air' },
+        { key: 'intent', label: 'Intent', type: 'select', options: opt(['seeking', 'offering']), required: true, half: true },
+        { key: 'role', label: 'Role', type: 'select', options: opt(BIZ_ROLES), required: true, half: true },
+        { key: 'name', label: 'Startup / name', type: 'text', required: true, half: true },
+        { key: 'founder', label: 'Founder', type: 'text', required: true, half: true },
+        { key: 'sector', label: 'Sector', type: 'text', required: true, half: true },
+        { key: 'stage', label: 'Stage', type: 'select', options: opt(BIZ_STAGES), half: true },
+        { key: 'zone', label: 'Zone', type: 'select', options: zoneOpts, half: true },
+        { key: 'ask', label: 'Ask', type: 'text', half: true },
+        { key: 'pitch', label: 'Pitch', type: 'textarea', required: true },
+        { key: 'whatsapp', label: 'WhatsApp (digits)', type: 'text', required: true, half: true },
+        { key: 'website', label: 'Website', type: 'text', half: true },
+      ]}
+      defaults={() => ({ status: 'approved', intent: 'seeking', role: 'investor', featured_on_air: false })}
+      columns={[
+        { key: 'name', label: 'Listing', render: (l) => <span className="font-medium">{l.name}</span> },
+        { key: 'role', label: 'Wants', render: (l) => `${l.intent} ${l.role}` },
+        { key: 'sector', label: 'Sector' },
+        { key: 'status', label: 'Status', render: (l) => <Badge tone={l.status === 'approved' ? 'good' : l.status === 'pending' ? 'warn' : 'bad'}>{l.status}</Badge> },
+        { key: 'featured_on_air', label: '', render: (l) => (l.featured_on_air ? <Badge tone="accent">On air</Badge> : null) },
       ]}
     />
   );

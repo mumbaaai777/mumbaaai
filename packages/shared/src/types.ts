@@ -160,6 +160,32 @@ export interface Dedication {
   sample?: boolean;
 }
 
+export const BIZ_INTENTS = ['seeking', 'offering'] as const;
+export type BizIntent = (typeof BIZ_INTENTS)[number];
+export const BIZ_ROLES = ['investor', 'cofounder', 'mentor', 'hire', 'customer', 'partner'] as const;
+export type BizRole = (typeof BIZ_ROLES)[number];
+export const BIZ_STAGES = ['idea', 'prototype', 'early_revenue', 'growing', 'established'] as const;
+export type BizStage = (typeof BIZ_STAGES)[number];
+/** Business Connect board listing (Mumbaa Business show). Public once approved by admin. */
+export interface BusinessListing {
+  id: string;
+  intent: BizIntent; // looking for / offering
+  role: BizRole;
+  name: string; // startup or person
+  founder: string;
+  sector: string;
+  stage?: BizStage | null;
+  zone?: ZoneId | null;
+  pitch: string; // <= 300 chars
+  ask?: string | null; // e.g. "₹25 lakh seed", "tech co-founder"
+  whatsapp: string; // digits incl. country code
+  website?: string | null;
+  status: ModerationStatus;
+  featured_on_air?: boolean;
+  created_at: string;
+  sample?: boolean;
+}
+
 export interface NewsItem {
   id: string;
   title: string;
