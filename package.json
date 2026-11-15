@@ -1,0 +1,19 @@
+{
+  "name": "mumbaaai",
+  "private": true,
+  "version": "0.1.0",
+  "description": "MumbaAai — Mumbai/MMR city super-app (web PWA, admin, API worker)",
+  "license": "UNLICENSED",
+  "workspaces": ["packages/shared", "apps/web", "apps/admin", "workers/api"],
+  "engines": { "node": ">=20.19" },
+  "scripts": {
+    "dev": "npm run dev -w @mumbaaai/web",
+    "dev:web": "npm run dev -w @mumbaaai/web",
+    "dev:admin": "npm run dev -w @mumbaaai/admin",
+    "dev:api": "npm run dev -w @mumbaaai/api",
+    "build": "npm run typecheck -w @mumbaaai/shared && npm run build -w @mumbaaai/web && npm run build -w @mumbaaai/admin && npm run typecheck -w @mumbaaai/api",
+    "build:pages": "node scripts/build-pages.mjs",
+    "seed:sql": "node scripts/gen-seed-sql.mjs",
+    "test:api": "node workers/api/scripts/smoke.mjs"
+  }
+}

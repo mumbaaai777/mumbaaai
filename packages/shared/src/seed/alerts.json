@@ -1,0 +1,46 @@
+[
+  {
+    "id": "sample-alert-01",
+    "title": "Slow traffic at Andheri subway — repair work",
+    "body": "BMC road repair until 6 pm. Use Gokhale bridge or Milan subway.",
+    "severity": "warning",
+    "kind": "traffic",
+    "zones": [
+      "western_suburbs"
+    ],
+    "starts_at": "2026-11-13T08:00:00+05:30",
+    "ends_at": null,
+    "active": true,
+    "sample": true
+  },
+  {
+    "id": "sample-alert-02",
+    "title": "Harbour line: block on Sunday, 11:10–16:10",
+    "body": "Sample notice: CSMT–Chunabhatti / Bandra up & down lines. Check official railway notice.",
+    "severity": "info",
+    "kind": "train",
+    "zones": [
+      "harbour",
+      "central_suburbs",
+      "south_mumbai"
+    ],
+    "starts_at": "2026-11-15T11:10:00+05:30",
+    "ends_at": "2026-11-15T16:10:00+05:30",
+    "active": true,
+    "sample": true
+  },
+  {
+    "id": "sample-alert-03",
+    "title": "Waterlogging reported at Sion circle",
+    "body": "Sample monsoon-style alert used for testing the banner.",
+    "severity": "critical",
+    "kind": "waterlogging",
+    "zones": [
+      "central_suburbs"
+    ],
+    "starts_at": "2026-11-13T06:00:00+05:30",
+    "ends_at": null,
+    "active": false,
+    "sample": true
+  }
+]

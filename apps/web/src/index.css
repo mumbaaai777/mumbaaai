@@ -1,0 +1,9 @@
+@import 'tailwindcss';
+@import '@mumbaaai/shared/theme.css';
+@source '../../../packages/shared/src';
+
+body {
+  min-height: 100dvh;
+  overscroll-behavior-y: none;
+  overflow-x: clip;
+}

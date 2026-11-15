@@ -1,0 +1,242 @@
+[
+  {
+    "day": "2026-10-15",
+    "daily_active_users": 1834,
+    "new_installs": 123,
+    "radio_listeners": 820,
+    "ask_aai_queries": 1166,
+    "sample": true
+  },
+  {
+    "day": "2026-10-16",
+    "daily_active_users": 1892,
+    "new_installs": 148,
+    "radio_listeners": 678,
+    "ask_aai_queries": 1615,
+    "sample": true
+  },
+  {
+    "day": "2026-10-17",
+    "daily_active_users": 1764,
+    "new_installs": 144,
+    "radio_listeners": 635,
+    "ask_aai_queries": 1138,
+    "sample": true
+  },
+  {
+    "day": "2026-10-18",
+    "daily_active_users": 1692,
+    "new_installs": 171,
+    "radio_listeners": 623,
+    "ask_aai_queries": 1204,
+    "sample": true
+  },
+  {
+    "day": "2026-10-19",
+    "daily_active_users": 1755,
+    "new_installs": 188,
+    "radio_listeners": 766,
+    "ask_aai_queries": 1401,
+    "sample": true
+  },
+  {
+    "day": "2026-10-20",
+    "daily_active_users": 1857,
+    "new_installs": 115,
+    "radio_listeners": 889,
+    "ask_aai_queries": 1383,
+    "sample": true
+  },
+  {
+    "day": "2026-10-21",
+    "daily_active_users": 1873,
+    "new_installs": 123,
+    "radio_listeners": 742,
+    "ask_aai_queries": 1888,
+    "sample": true
+  },
+  {
+    "day": "2026-10-22",
+    "daily_active_users": 1893,
+    "new_installs": 168,
+    "radio_listeners": 843,
+    "ask_aai_queries": 1488,
+    "sample": true
+  },
+  {
+    "day": "2026-10-23",
+    "daily_active_users": 1955,
+    "new_installs": 123,
+    "radio_listeners": 701,
+    "ask_aai_queries": 1374,
+    "sample": true
+  },
+  {
+    "day": "2026-10-24",
+    "daily_active_users": 1911,
+    "new_installs": 155,
+    "radio_listeners": 758,
+    "ask_aai_queries": 1706,
+    "sample": true
+  },
+  {
+    "day": "2026-10-25",
+    "daily_active_users": 1837,
+    "new_installs": 137,
+    "radio_listeners": 861,
+    "ask_aai_queries": 1744,
+    "sample": true
+  },
+  {
+    "day": "2026-10-26",
+    "daily_active_users": 1863,
+    "new_installs": 165,
+    "radio_listeners": 798,
+    "ask_aai_queries": 1932,
+    "sample": true
+  },
+  {
+    "day": "2026-10-27",
+    "daily_active_users": 1944,
+    "new_installs": 144,
+    "radio_listeners": 966,
+    "ask_aai_queries": 1281,
+    "sample": true
+  },
+  {
+    "day": "2026-10-28",
+    "daily_active_users": 1992,
+    "new_installs": 194,
+    "radio_listeners": 742,
+    "ask_aai_queries": 1682,
+    "sample": true
+  },
+  {
+    "day": "2026-10-29",
+    "daily_active_users": 1996,
+    "new_installs": 186,
+    "radio_listeners": 927,
+    "ask_aai_queries": 1769,
+    "sample": true
+  },
+  {
+    "day": "2026-10-30",
+    "daily_active_users": 2100,
+    "new_installs": 158,
+    "radio_listeners": 954,
+    "ask_aai_queries": 1884,
+    "sample": true
+  },
+  {
+    "day": "2026-10-31",
+    "daily_active_users": 2038,
+    "new_installs": 168,
+    "radio_listeners": 970,
+    "ask_aai_queries": 2185,
+    "sample": true
+  },
+  {
+    "day": "2026-11-01",
+    "daily_active_users": 1962,
+    "new_installs": 182,
+    "radio_listeners": 704,
+    "ask_aai_queries": 1865,
+    "sample": true
+  },
+  {
+    "day": "2026-11-02",
+    "daily_active_users": 2038,
+    "new_installs": 223,
+    "radio_listeners": 964,
+    "ask_aai_queries": 1512,
+    "sample": true
+  },
+  {
+    "day": "2026-11-03",
+    "daily_active_users": 2085,
+    "new_installs": 194,
+    "radio_listeners": 736,
+    "ask_aai_queries": 1732,
+    "sample": true
+  },
+  {
+    "day": "2026-11-04",
+    "daily_active_users": 2106,
+    "new_installs": 138,
+    "radio_listeners": 755,
+    "ask_aai_queries": 2072,
+    "sample": true
+  },
+  {
+    "day": "2026-11-05",
+    "daily_active_users": 2122,
+    "new_installs": 153,
+    "radio_listeners": 867,
+    "ask_aai_queries": 2197,
+    "sample": true
+  },
+  {
+    "day": "2026-11-06",
+    "daily_active_users": 2132,
+    "new_installs": 175,
+    "radio_listeners": 921,
+    "ask_aai_queries": 2220,
+    "sample": true
+  },
+  {
+    "day": "2026-11-07",
+    "daily_active_users": 2105,
+    "new_installs": 217,
+    "radio_listeners": 824,
+    "ask_aai_queries": 1700,
+    "sample": true
+  },
+  {
+    "day": "2026-11-08",
+    "daily_active_users": 2010,
+    "new_installs": 209,
+    "radio_listeners": 992,
+    "ask_aai_queries": 1357,
+    "sample": true
+  },
+  {
+    "day": "2026-11-09",
+    "daily_active_users": 2031,
+    "new_installs": 145,
+    "radio_listeners": 781,
+    "ask_aai_queries": 1711,
+    "sample": true
+  },
+  {
+    "day": "2026-11-10",
+    "daily_active_users": 2102,
+    "new_installs": 153,
+    "radio_listeners": 736,
+    "ask_aai_queries": 1701,
+    "sample": true
+  },
+  {
+    "day": "2026-11-11",
+    "daily_active_users": 2148,
+    "new_installs": 189,
+    "radio_listeners": 1058,
+    "ask_aai_queries": 2030,
+    "sample": true
+  },
+  {
+    "day": "2026-11-12",
+    "daily_active_users": 2214,
+    "new_installs": 201,
+    "radio_listeners": 999,
+    "ask_aai_queries": 1388,
+    "sample": true
+  },
+  {
+    "day": "2026-11-13",
+    "daily_active_users": 2333,
+    "new_installs": 230,
+    "radio_listeners": 1122,
+    "ask_aai_queries": 2330,
+    "sample": true
+  }
+]

@@ -1,0 +1,15 @@
+name = "mumbaaai-api"
+main = "src/index.ts"
+compatibility_date = "2026-11-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+# Browser origins allowed to call the API (comma-separated). localhost is always allowed for dev.
+# For GitHub Pages this is just the origin, without the /repo path.
+ALLOWED_ORIGINS = "https://YOUR-GITHUB-USERNAME.github.io"
+GEMINI_MODEL = "gemini-flash-latest"
+GEMINI_FALLBACK_MODEL = "gemini-flash-lite-latest"
+RATE_LIMIT_PER_MINUTE = "8"
+RATE_LIMIT_PER_DAY = "150"
+
+# Secret (never commit): wrangler secret put GEMINI_API_KEY

@@ -1,0 +1,24 @@
+{
+  "name": "MumbaAai — Your city. Your Aai.",
+  "short_name": "MumbaAai",
+  "description": "Weather, trains, jobs, Mumbaa Radio and Ask Aai for Mumbai & MMR.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FAF7F2",
+  "theme_color": "#0B2545",
+  "lang": "en-IN",
+  "categories": ["travel", "news", "lifestyle", "music"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Mumbaa Radio", "url": "./#/radio", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Ask Aai", "url": "./#/ask", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
+  ]
+}

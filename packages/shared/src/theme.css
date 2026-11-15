@@ -1,0 +1,117 @@
+/* MumbaAai shared theme — imported by apps/web and apps/admin after `@import "tailwindcss"`. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --bg: #faf7f2;
+  --surface: #ffffff;
+  --surface-2: #f3eee5;
+  --ink: #0e1b2c;
+  --ink-soft: #2a3a50;
+  --muted: #5b6675;
+  --line: rgb(11 37 69 / 0.1);
+  --line-strong: rgb(11 37 69 / 0.18);
+  --navy: #0b2545;
+  --marigold: #f4a300;
+  --marigold-ink: #8a5a00; /* marigold-family text that passes AA on off-white */
+  --live: #e63946;
+  --live-ink: #c42a37;
+  --accent-soft: rgb(244 163 0 / 0.14);
+  --shadow: 0 1px 0 rgb(11 37 69 / 0.04), 0 8px 24px -12px rgb(11 37 69 / 0.18);
+}
+
+.dark {
+  --bg: #071a33;
+  --surface: #0d2342;
+  --surface-2: #12305a;
+  --ink: #f4efe6;
+  --ink-soft: #d5dbe5;
+  --muted: #9aa8bb;
+  --line: rgb(250 247 242 / 0.09);
+  --line-strong: rgb(250 247 242 / 0.18);
+  --marigold-ink: #f4b733;
+  --live-ink: #ff6b75;
+  --accent-soft: rgb(244 163 0 / 0.16);
+  --shadow: 0 1px 0 rgb(0 0 0 / 0.2), 0 10px 30px -14px rgb(0 0 0 / 0.6);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-navy: #0b2545;
+  --color-marigold: #f4a300;
+  --color-marigold-ink: var(--marigold-ink);
+  --color-live: #e63946;
+  --color-live-ink: var(--live-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-offwhite: #faf7f2;
+  --font-sans: 'Inter Variable', 'Noto Sans Devanagari Variable', ui-sans-serif, system-ui, sans-serif;
+  --shadow-card: var(--shadow);
+}
+
+@layer base {
+html {
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'cv11', 'ss01';
+}
+html[lang='hi'] body,
+html[lang='mr'] body {
+  /* Devanagari first so matras render with the right metrics */
+  font-family: 'Noto Sans Devanagari Variable', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  line-height: 1.6;
+}
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+}
+}
+
+@layer components {
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+.eyebrow {
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--muted);
+}
+html[lang='hi'] .eyebrow,
+html[lang='mr'] .eyebrow {
+  letter-spacing: 0.02em;
+  font-size: 0.75rem;
+}
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 1.25rem;
+  box-shadow: var(--shadow);
+}
+.hairline {
+  border-color: var(--line);
+}
+}
+
+:focus-visible {
+  outline: 2px solid var(--marigold);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

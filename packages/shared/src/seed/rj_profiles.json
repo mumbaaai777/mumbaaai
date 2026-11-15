@@ -1,0 +1,55 @@
+[
+  {
+    "id": "sample-rj-aai",
+    "name": "RJ Aai",
+    "bio": "The voice of the morning local. Knows every platform number by heart.",
+    "photo_url": null,
+    "languages": [
+      "mr",
+      "hi",
+      "en"
+    ],
+    "instagram": null,
+    "active": true,
+    "sample": true
+  },
+  {
+    "id": "sample-rj-sameer",
+    "name": "RJ Sameer",
+    "bio": "Jobs, careers and the business of Mumbai.",
+    "photo_url": null,
+    "languages": [
+      "hi",
+      "en"
+    ],
+    "instagram": null,
+    "active": true,
+    "sample": true
+  },
+  {
+    "id": "sample-rj-nisha",
+    "name": "RJ Nisha",
+    "bio": "Street food, gully cricket and evening traffic.",
+    "photo_url": null,
+    "languages": [
+      "hi",
+      "mr"
+    ],
+    "instagram": null,
+    "active": true,
+    "sample": true
+  },
+  {
+    "id": "sample-rj-kabir",
+    "name": "RJ Kabir",
+    "bio": "Bollywood, old and new, till late.",
+    "photo_url": null,
+    "languages": [
+      "hi",
+      "en"
+    ],
+    "instagram": null,
+    "active": true,
+    "sample": true
+  }
+]

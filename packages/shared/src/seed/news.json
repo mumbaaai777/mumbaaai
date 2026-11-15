@@ -1,0 +1,50 @@
+[
+  {
+    "id": "sample-news-1",
+    "title": "BEST adds more AC buses on Andheri–Kurla corridor",
+    "link": "https://example.com/news/1",
+    "source": "MumbaAai sample",
+    "published_at": "2026-11-13T07:00:00+05:30",
+    "sample": true
+  },
+  {
+    "id": "sample-news-2",
+    "title": "Metro 2A and 7 to run extra services this weekend",
+    "link": "https://example.com/news/2",
+    "source": "MumbaAai sample",
+    "published_at": "2026-11-13T07:00:00+05:30",
+    "sample": true
+  },
+  {
+    "id": "sample-news-3",
+    "title": "Coastal Road northbound arm: what changes for commuters",
+    "link": "https://example.com/news/3",
+    "source": "MumbaAai sample",
+    "published_at": "2026-11-13T07:00:00+05:30",
+    "sample": true
+  },
+  {
+    "id": "sample-news-4",
+    "title": "Thane creek flamingo season begins early",
+    "link": "https://example.com/news/4",
+    "source": "MumbaAai sample",
+    "published_at": "2026-11-13T07:00:00+05:30",
+    "sample": true
+  },
+  {
+    "id": "sample-news-5",
+    "title": "Navi Mumbai airport: how to reach from Panvel and Kharghar",
+    "link": "https://example.com/news/5",
+    "source": "MumbaAai sample",
+    "published_at": "2026-11-13T07:00:00+05:30",
+    "sample": true
+  },
+  {
+    "id": "sample-news-6",
+    "title": "Dadar flower market prepares for wedding season",
+    "link": "https://example.com/news/6",
+    "source": "MumbaAai sample",
+    "published_at": "2026-11-13T07:00:00+05:30",
+    "sample": true
+  }
+]

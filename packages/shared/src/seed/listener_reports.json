@@ -1,0 +1,62 @@
+[
+  {
+    "id": "sample-rep-01",
+    "kind": "train",
+    "zone": "western_suburbs",
+    "location": "Borivali",
+    "line": "western",
+    "message": "Fast trains towards Churchgate running 10 min late.",
+    "reporter_name": "Pooja",
+    "status": "approved",
+    "created_at": "2026-11-13T08:42:00+05:30",
+    "sample": true
+  },
+  {
+    "id": "sample-rep-02",
+    "kind": "traffic",
+    "zone": "central_suburbs",
+    "location": "JVLR near Powai",
+    "line": null,
+    "message": "Heavy traffic both directions, slow moving.",
+    "reporter_name": null,
+    "status": "approved",
+    "created_at": "2026-11-13T09:05:00+05:30",
+    "sample": true
+  },
+  {
+    "id": "sample-rep-03",
+    "kind": "traffic",
+    "zone": "thane",
+    "location": "Ghodbunder Road, Kasarvadavali",
+    "line": null,
+    "message": "Truck breakdown, one lane blocked.",
+    "reporter_name": "Amit",
+    "status": "pending",
+    "created_at": "2026-11-13T09:20:00+05:30",
+    "sample": true
+  },
+  {
+    "id": "sample-rep-04",
+    "kind": "train",
+    "zone": "harbour",
+    "location": "Vashi",
+    "line": "harbour",
+    "message": "Panvel locals bunching up, platform crowded.",
+    "reporter_name": null,
+    "status": "pending",
+    "created_at": "2026-11-13T09:31:00+05:30",
+    "sample": true
+  },
+  {
+    "id": "sample-rep-05",
+    "kind": "other",
+    "zone": "south_mumbai",
+    "location": "Marine Drive",
+    "line": null,
+    "message": "test test",
+    "reporter_name": null,
+    "status": "rejected",
+    "created_at": "2026-11-12T18:02:00+05:30",
+    "sample": true
+  }
+]

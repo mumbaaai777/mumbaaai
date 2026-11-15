@@ -1,0 +1,58 @@
+[
+  {
+    "id": "rc-1",
+    "placement": "home_banner",
+    "pricing_model": "cpm",
+    "price_inr": 180,
+    "notes": "Top of Home, zone-targeted"
+  },
+  {
+    "id": "rc-2",
+    "placement": "feed_card",
+    "pricing_model": "cpm",
+    "price_inr": 120,
+    "notes": "In-feed card between sections"
+  },
+  {
+    "id": "rc-3",
+    "placement": "feed_card",
+    "pricing_model": "cpc",
+    "price_inr": 12,
+    "notes": "Pay per click alternative"
+  },
+  {
+    "id": "rc-4",
+    "placement": "radio_preroll_audio",
+    "pricing_model": "cpm",
+    "price_inr": 220,
+    "notes": "15–20 s audio before stream starts"
+  },
+  {
+    "id": "rc-5",
+    "placement": "jobs_sponsored",
+    "pricing_model": "cpc",
+    "price_inr": 15,
+    "notes": "Pinned job at top of Jobs"
+  },
+  {
+    "id": "rc-6",
+    "placement": "jobs_sponsored",
+    "pricing_model": "flat_daily",
+    "price_inr": 500,
+    "notes": "Pinned job, flat per day"
+  },
+  {
+    "id": "rc-7",
+    "placement": "ask_aai_sponsored",
+    "pricing_model": "cpc",
+    "price_inr": 10,
+    "notes": "Labelled card under relevant answers"
+  },
+  {
+    "id": "rc-8",
+    "placement": "home_banner",
+    "pricing_model": "flat_daily",
+    "price_inr": 1500,
+    "notes": "Takeover, one advertiser per zone per day"
+  }
+]
