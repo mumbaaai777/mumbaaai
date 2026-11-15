@@ -7,6 +7,7 @@ interface AuthState {
   ready: boolean;
   signIn: (email: string, password: string) => Promise<string | null>; // returns error message
   sendLink: (email: string) => Promise<string | null>;
+  signUp: (email: string, password: string) => Promise<string | null>;
   signOut: () => Promise<void>;
 }
 const Ctx = createContext<AuthState | null>(null);
@@ -65,6 +66,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     return null;
   };
+  const signUp = async (e: string, p: string) => {
+    if (isDemo) return 'Works once Supabase is connected.';
+    if (p.length < 8) return 'Use at least 8 characters for the password.';
+    const { data, error } = await db.client!.auth.signUp({ email: e.trim(), password: p, options: { emailRedirectTo: location.origin + location.pathname } });
+    if (error) return error.message.includes('registered') ? 'This email already has a password. Use Sign in.' : error.message;
+    if (!data.session) return 'Account created. Open the confirmation email, then sign in.';
+    if (!(await checkAdmin())) {
+      await db.client!.auth.signOut();
+      return 'Account created, but this email is not invited as an admin. Ask an owner to add it in Admins & password.';
+    }
+    return null;
+  };
   const sendLink = async (e: string) => {
     if (isDemo) return 'Sign-in links work once Supabase is connected.';
     const { error } = await db.client!.auth.signInWithOtp({
@@ -79,7 +92,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setEmail(null);
     setIsAdmin(false);
   };
-  return <Ctx.Provider value={{ email, isAdmin, ready, signIn, sendLink, signOut }}>{children}</Ctx.Provider>;
+  return <Ctx.Provider value={{ email, isAdmin, ready, signIn, sendLink, signUp, signOut }}>{children}</Ctx.Provider>;
 }
 export function useAuth() {
   const v = useContext(Ctx);

@@ -43,7 +43,8 @@ function ThemeToggle() {
 }
 
 function Login() {
-  const { signIn, sendLink } = useAuth();
+  const { signIn, sendLink, signUp } = useAuth();
+  const [mode, setMode] = useState<'in' | 'new'>('in');
   const [linkSent, setLinkSent] = useState(false);
   const [email, setEmail] = useState(isDemo ? DEMO_EMAIL : '');
   const [pw, setPw] = useState(isDemo ? DEMO_PASSWORD : '');
@@ -56,19 +57,20 @@ function Login() {
         onSubmit={async (e) => {
           e.preventDefault();
           setBusy(true);
-          setErr(await signIn(email, pw));
+          setErr(mode === 'new' ? await signUp(email, pw) : await signIn(email, pw));
           setBusy(false);
         }}
       >
         <img src={asset('assets/logo-primary.png')} alt="MumbaAai" className="h-10 dark:hidden" />
         <img src={asset('assets/logo-dark.png')} alt="MumbaAai" className="hidden h-10 dark:block" />
-        <h1 className="text-xl font-semibold text-ink">Admin sign in</h1>
+        <h1 className="text-xl font-semibold text-ink">{mode === 'new' ? 'Create your admin password' : 'Admin sign in'}</h1>
+        {mode === 'new' && <p className="text-sm text-muted">For invited admins signing in for the first time. Choose a password of at least 8 characters.</p>}
         {isDemo && <p className="rounded-lg bg-accent-soft p-3 text-xs text-marigold-ink">Demo mode: data is stored in this browser only. Connect Supabase for the shared admin.</p>}
         <input className={inputCls} type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="username" />
-        <input className={inputCls} type="password" placeholder="Password" value={pw} onChange={(e) => setPw(e.target.value)} autoComplete="current-password" />
+        <input className={inputCls} type="password" placeholder={mode === 'new' ? 'New password' : 'Password'} value={pw} onChange={(e) => setPw(e.target.value)} autoComplete={mode === 'new' ? 'new-password' : 'current-password'} />
         {err && <p className="text-sm text-live-ink">{err}</p>}
         <Btn className="w-full" disabled={busy}>
-          {busy ? 'Signing in…' : 'Sign in'}
+          {busy ? 'Please wait…' : mode === 'new' ? 'Create password & sign in' : 'Sign in'}
         </Btn>
         {!isDemo && (
           <button
@@ -84,6 +86,11 @@ function Login() {
             }}
           >
             Email me a sign-in link instead
+          </button>
+        )}
+        {!isDemo && (
+          <button type="button" className="w-full text-center text-sm text-ink-soft underline" onClick={() => { setMode(mode === 'in' ? 'new' : 'in'); setErr(null); }}>
+            {mode === 'in' ? 'First time? Create your admin password' : 'Back to sign in'}
           </button>
         )}
         {linkSent && <p className="text-sm text-ink-soft">Check your inbox and open the link on this device.</p>}
