@@ -11,6 +11,7 @@ export const env = {
   radioIsTest: !clean(import.meta.env.VITE_RADIO_STREAM_URL) || import.meta.env.VITE_RADIO_IS_TEST !== 'false',
   /** Station WhatsApp number for voice-note dedications, digits only incl. country code (e.g. 919800000000). */
   radioWhatsapp: clean(import.meta.env.VITE_RADIO_WHATSAPP)?.replace(/\D/g, ''),
+  contactPhone: clean(import.meta.env.VITE_CONTACT_PHONE)?.replace(/\D/g, ''),
   base: import.meta.env.BASE_URL,
 };
 

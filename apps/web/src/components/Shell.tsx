@@ -6,7 +6,7 @@ import { LANGUAGES, type Lang } from '@mumbaaai/shared';
 import { useI18n } from '../lib/i18n';
 import { useTheme } from '../lib/theme';
 import { useRadio } from '../lib/radio';
-import { asset } from '../lib/env';
+import { asset, env } from '../lib/env';
 import { isDemo } from '../lib/data';
 import { spring } from './motion';
 
@@ -93,6 +93,25 @@ export function Shell({ children }: { children: ReactNode }) {
       </header>
 
       {children}
+
+      {env.contactPhone && (
+        <footer className="mx-auto mb-24 mt-10 max-w-6xl px-4 md:mb-10">
+          <div className="card flex flex-wrap items-center justify-between gap-3 p-4">
+            <div>
+              <p className="font-semibold text-ink">{t.contact.title}</p>
+              <p className="text-sm text-muted">{t.contact.hint}</p>
+            </div>
+            <div className="flex gap-2">
+              <a href={`tel:+${env.contactPhone}`} className="rounded-full border border-line-strong px-4 py-2 text-sm font-semibold text-ink">
+                {t.contact.call} +{env.contactPhone.replace(/^91(\d{5})(\d{5})$/, '91 $1 $2')}
+              </a>
+              <a href={`https://wa.me/${env.contactPhone}`} target="_blank" rel="noreferrer" className="rounded-full bg-[#25D366] px-4 py-2 text-sm font-semibold text-white">
+                {t.contact.whatsapp}
+              </a>
+            </div>
+          </div>
+        </footer>
+      )}
 
       <nav
         aria-label="Tabs"

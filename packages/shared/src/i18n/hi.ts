@@ -155,6 +155,7 @@ export const hi: Dict = {
     safety: 'फ़ंडिंग "अनलॉक" करने के लिए कभी पैसे न दें। निवेश से पहले मिलकर जाँच करें।',
     showLink: 'बिज़नेस कनेक्ट बोर्ड',
   },
+  contact: { title: 'MumbaAai से संपर्क करें', hint: 'विज्ञापन, पार्टनरशिप या ख़बर भेजें', call: 'कॉल', whatsapp: 'WhatsApp' },
   travel: {
     title: 'सफ़र',
     trains: 'लोकल ट्रेन',

@@ -155,6 +155,7 @@ export const en = {
     safety: 'Never pay anyone to "unlock" funding. Meet in public and verify before you invest.',
     showLink: 'Business Connect board',
   },
+  contact: { title: 'Contact MumbaAai', hint: 'Advertise, partner or send news', call: 'Call', whatsapp: 'WhatsApp' },
   travel: {
     title: 'Travel',
     trains: 'Local trains',
