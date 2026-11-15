@@ -59,7 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return `Demo mode: use ${DEMO_EMAIL} / ${DEMO_PASSWORD}`;
     }
     const { error } = await db.client!.auth.signInWithPassword({ email: e.trim(), password: p });
-    if (error) return error.message;
+    if (error) return error.message === 'Invalid login credentials' ? 'Wrong email or password. If this is your first time, tap "First time? Create your admin password" below.' : error.message;
     if (!(await checkAdmin())) {
       await db.client!.auth.signOut();
       return 'Signed in, but this email is not an admin. Ask an owner to add it in Admins & password.';
