@@ -138,6 +138,28 @@ export interface ListenerReport {
   sample?: boolean;
 }
 
+export const DEDICATION_KINDS = ['farmaish', 'birthday', 'anniversary', 'congrats', 'other'] as const;
+export type DedicationKind = (typeof DEDICATION_KINDS)[number];
+export const DEDICATION_STATUSES = ['pending', 'approved', 'scheduled', 'aired', 'rejected'] as const;
+export type DedicationStatus = (typeof DEDICATION_STATUSES)[number];
+/** A listener's song request + message (Aap Ki Farmaish / Celebrations). */
+export interface Dedication {
+  id: string;
+  kind: DedicationKind;
+  from_name: string;
+  from_area?: string | null;
+  to_name: string;
+  song: string; // song title / film / artist as the listener typed it
+  message: string;
+  show_pref?: string | null; // preferred show title
+  phone?: string | null; // never shown publicly
+  status: DedicationStatus;
+  air_at?: string | null; // ISO, set by RJ when scheduled
+  rj_note?: string | null;
+  created_at: string;
+  sample?: boolean;
+}
+
 export interface NewsItem {
   id: string;
   title: string;

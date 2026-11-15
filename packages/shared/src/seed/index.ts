@@ -1,6 +1,6 @@
 // Bundled seed data used when Supabase is not configured. Every record carries `sample: true`
 // and the UI labels it as sample data.
-import type { Ad, AppUsersStat, CityAlert, Job, ListenerReport, NewsItem, RadioShow, RateCardRow, RjProfile } from '../types';
+import type { Dedication, Ad, AppUsersStat, CityAlert, Job, ListenerReport, NewsItem, RadioShow, RateCardRow, RjProfile } from '../types';
 import ads from './ads.json';
 import jobs from './jobs.json';
 import alerts from './alerts.json';
@@ -10,6 +10,7 @@ import listenerReports from './listener_reports.json';
 import news from './news.json';
 import appUsersStats from './app_users_stats.json';
 import rateCard from './rate_card.json';
+import dedications from './dedications.json';
 
 export const seed = {
   ads: ads as Ad[],
@@ -21,5 +22,6 @@ export const seed = {
   news: news as NewsItem[],
   app_users_stats: appUsersStats as AppUsersStat[],
   rate_card: rateCard as RateCardRow[],
+  dedications: dedications as Dedication[],
 };
 export type SeedTables = typeof seed;

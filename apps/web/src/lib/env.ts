@@ -9,6 +9,8 @@ export const env = {
   apiUrl: clean(import.meta.env.VITE_API_URL),
   radioUrl: clean(import.meta.env.VITE_RADIO_STREAM_URL) ?? DEFAULT_TEST_STREAM,
   radioIsTest: !clean(import.meta.env.VITE_RADIO_STREAM_URL) || import.meta.env.VITE_RADIO_IS_TEST !== 'false',
+  /** Station WhatsApp number for voice-note dedications, digits only incl. country code (e.g. 919800000000). */
+  radioWhatsapp: clean(import.meta.env.VITE_RADIO_WHATSAPP)?.replace(/\D/g, ''),
   base: import.meta.env.BASE_URL,
 };
 

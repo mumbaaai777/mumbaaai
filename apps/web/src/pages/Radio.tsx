@@ -9,6 +9,7 @@ import { asset } from '../lib/env';
 import { Page, Stagger, Item } from '../components/motion';
 import { SectionTitle, SampleBadge } from '../components/ui';
 import { AdSlot } from '../components/AdSlot';
+import { DedicationForm, DedicationWall } from '../components/Dedications';
 
 /** Bars from the Web Audio analyser when available; otherwise a gentle synthetic animation. */
 function Visualiser() {
@@ -139,6 +140,10 @@ export default function Radio() {
             )}
           </section>
           <AdSlot placement="radio_preroll_audio" className="mt-4" />
+          <div className="mt-5 grid gap-5">
+            <DedicationForm shows={sortSchedule(shows ?? [])} />
+            <DedicationWall />
+          </div>
         </Item>
 
         <Item>
@@ -154,6 +159,8 @@ export default function Radio() {
                     <div className="min-w-0">
                       <p className="flex items-center gap-2 font-semibold text-ink">
                         {s.title}
+                        {s.language !== 'mixed' && <span className="rounded border border-line-strong px-1 py-px text-[9px] font-bold uppercase tracking-wider text-muted">{s.language === 'mr' ? 'मराठी' : s.language === 'hi' ? 'हिन्दी' : 'EN'}</span>}
+                        {s.language === 'mixed' && <span className="rounded border border-line-strong px-1 py-px text-[9px] font-bold uppercase tracking-wider text-muted">हिं · म</span>}
                         {on && <span className="rounded bg-[#C42A37] px-1.5 py-px text-[9px] font-bold uppercase tracking-wider text-white">{t.common.live}</span>}
                       </p>
                       <p className="text-sm text-muted">

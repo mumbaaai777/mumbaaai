@@ -13,6 +13,8 @@ export type TableName =
   | 'radio_schedule'
   | 'rj_profiles'
   | 'listener_reports'
+  | 'dedications'
+  | 'dedications_public'
   | 'news_overrides'
   | 'app_users_stats'
   | 'rate_card';
@@ -46,6 +48,10 @@ const seedFor = (table: TableName): Row[] => {
 };
 
 function demoLoad(table: TableName): Row[] {
+  if (table === 'dedications_public')
+    return demoLoad('dedications')
+      .filter((r) => ['approved', 'scheduled', 'aired'].includes(String(r.status)))
+      .map(({ phone: _p, ...r }) => r);
   try {
     const raw = localStorage.getItem(DEMO_PREFIX + table);
     if (raw) return JSON.parse(raw) as Row[];
@@ -153,7 +159,7 @@ function supabaseSource(client: SupabaseClient): DataSource {
     },
     async insert<T>(table: TableName, row: Partial<T>) {
       // listener_reports: anon users can insert but not read back pending rows, so skip `select()`.
-      if (table === 'listener_reports') {
+      if (table === 'listener_reports' || table === 'dedications') {
         const { error } = await client.from(table).insert(row as Row);
         if (error) throw error;
         return row as T;
