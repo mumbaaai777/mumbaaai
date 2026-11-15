@@ -17,6 +17,7 @@ export type TableName =
   | 'dedications_public'
   | 'business_listings'
   | 'paper_articles'
+  | 'admin_invites'
   | 'news_overrides'
   | 'app_users_stats'
   | 'rate_card';

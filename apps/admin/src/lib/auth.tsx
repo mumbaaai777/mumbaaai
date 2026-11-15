@@ -15,6 +15,8 @@ export const DEMO_EMAIL = 'demo@mumbaaai.app';
 export const DEMO_PASSWORD = 'demo';
 
 async function checkAdmin(): Promise<boolean> {
+  // Invited emails (admin_invites) become admins on first sign-in.
+  await db.client!.rpc('claim_admin').then(() => undefined, () => undefined);
   const { data, error } = await db.client!.rpc('is_admin');
   return !error && data === true;
 }
@@ -59,7 +61,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (error) return error.message;
     if (!(await checkAdmin())) {
       await db.client!.auth.signOut();
-      return 'Signed in, but this account is not in the admins table. Ask an owner to add your user id.';
+      return 'Signed in, but this email is not an admin. Ask an owner to add it in Admins & password.';
     }
     return null;
   };
@@ -67,7 +69,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (isDemo) return 'Sign-in links work once Supabase is connected.';
     const { error } = await db.client!.auth.signInWithOtp({
       email: e.trim(),
-      options: { shouldCreateUser: false, emailRedirectTo: location.origin + location.pathname },
+      options: { shouldCreateUser: true, emailRedirectTo: location.origin + location.pathname },
     });
     return error ? error.message : null;
   };
