@@ -6,6 +6,7 @@ interface AuthState {
   isAdmin: boolean;
   ready: boolean;
   signIn: (email: string, password: string) => Promise<string | null>; // returns error message
+  sendLink: (email: string) => Promise<string | null>;
   signOut: () => Promise<void>;
 }
 const Ctx = createContext<AuthState | null>(null);
@@ -62,13 +63,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     return null;
   };
+  const sendLink = async (e: string) => {
+    if (isDemo) return 'Sign-in links work once Supabase is connected.';
+    const { error } = await db.client!.auth.signInWithOtp({
+      email: e.trim(),
+      options: { shouldCreateUser: false, emailRedirectTo: location.origin + location.pathname },
+    });
+    return error ? error.message : null;
+  };
   const signOut = async () => {
     if (isDemo) sessionStorage.removeItem(DEMO_KEY);
     else await db.client!.auth.signOut();
     setEmail(null);
     setIsAdmin(false);
   };
-  return <Ctx.Provider value={{ email, isAdmin, ready, signIn, signOut }}>{children}</Ctx.Provider>;
+  return <Ctx.Provider value={{ email, isAdmin, ready, signIn, sendLink, signOut }}>{children}</Ctx.Provider>;
 }
 export function useAuth() {
   const v = useContext(Ctx);

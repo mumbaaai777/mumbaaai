@@ -194,7 +194,7 @@ function supabaseSource(client: SupabaseClient): DataSource {
 
 export function createDataSource(url?: string, anonKey?: string): DataSource {
   if (url && anonKey) {
-    return supabaseSource(createClient(url, anonKey, { auth: { persistSession: true, autoRefreshToken: true } }));
+    return supabaseSource(createClient(url, anonKey, { auth: { persistSession: true, autoRefreshToken: true, flowType: 'pkce', detectSessionInUrl: true } }));
   }
   return demoSource();
 }

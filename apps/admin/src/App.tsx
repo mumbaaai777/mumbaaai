@@ -39,7 +39,8 @@ function ThemeToggle() {
 }
 
 function Login() {
-  const { signIn } = useAuth();
+  const { signIn, sendLink } = useAuth();
+  const [linkSent, setLinkSent] = useState(false);
   const [email, setEmail] = useState(isDemo ? DEMO_EMAIL : '');
   const [pw, setPw] = useState(isDemo ? DEMO_PASSWORD : '');
   const [err, setErr] = useState<string | null>(null);
@@ -65,6 +66,23 @@ function Login() {
         <Btn className="w-full" disabled={busy}>
           {busy ? 'Signing in…' : 'Sign in'}
         </Btn>
+        {!isDemo && (
+          <button
+            type="button"
+            className="w-full text-center text-sm font-semibold text-marigold-ink underline disabled:opacity-50"
+            disabled={busy || !email}
+            onClick={async () => {
+              setBusy(true);
+              const e = await sendLink(email);
+              setErr(e);
+              setLinkSent(!e);
+              setBusy(false);
+            }}
+          >
+            Email me a sign-in link instead
+          </button>
+        )}
+        {linkSent && <p className="text-sm text-ink-soft">Check your inbox and open the link on this device.</p>}
       </form>
     </div>
   );
