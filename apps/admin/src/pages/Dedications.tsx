@@ -2,7 +2,7 @@
 import { useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Check, X, Clock, Radio, Copy, Phone } from 'lucide-react';
-import { DEDICATION_STATUSES, type Dedication, type DedicationStatus } from '@mumbaaai/shared';
+import { DEDICATION_STATUSES, checkText, MOD_FLAG_LABEL, type Dedication, type DedicationStatus } from '@mumbaaai/shared';
 import { db } from '../lib/data';
 import { useRows } from '../lib/useRows';
 import { Badge, Btn, inputCls } from '../components/Resource';
@@ -82,7 +82,10 @@ export default function Dedications() {
                       {KIND[r.kind] ?? r.kind} · {r.show_pref ?? 'Any show'} · received {ist(r.created_at)}
                     </p>
                   </div>
-                  <div className="flex gap-1">
+                  <div className="flex flex-wrap justify-end gap-1">
+                    {checkText(`${r.from_name} ${r.to_name} ${r.song} ${r.message}`).map((f) => (
+                      <Badge key={f} tone="bad">⚠ {MOD_FLAG_LABEL[f]}</Badge>
+                    ))}
                     {r.sample && <Badge>Sample</Badge>}
                     <Badge tone={TONE[r.status]}>{r.status}</Badge>
                   </div>

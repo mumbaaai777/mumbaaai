@@ -1,4 +1,4 @@
-import { BIZ_ROLES, BIZ_STAGES, type BusinessListing, AD_CATEGORIES, AD_PLACEMENTS, AD_STATUSES, JOB_TYPES, PRICING_MODELS, ZONES, AdCard, ctr, inr, type Ad, type CityAlert, type Job, type ListenerReport, type RadioShow, type RjProfile } from '@mumbaaai/shared';
+import { checkText, MOD_FLAG_LABEL, BIZ_ROLES, BIZ_STAGES, type BusinessListing, AD_CATEGORIES, AD_PLACEMENTS, AD_STATUSES, JOB_TYPES, PRICING_MODELS, ZONES, AdCard, ctr, inr, type Ad, type CityAlert, type Job, type ListenerReport, type RadioShow, type RjProfile } from '@mumbaaai/shared';
 import { dictionaries } from '@mumbaaai/shared';
 const en = dictionaries.en;
 import { ResourcePage, Badge, type Field } from '../components/Resource';
@@ -215,7 +215,21 @@ export function BusinessPage() {
       ]}
       defaults={() => ({ status: 'approved', intent: 'seeking', role: 'investor', featured_on_air: false })}
       columns={[
-        { key: 'name', label: 'Listing', render: (l) => <span className="font-medium">{l.name}</span> },
+        {
+          key: 'name',
+          label: 'Listing',
+          render: (l) => {
+            const flags = checkText(`${l.name} ${l.pitch ?? ''}`, { allowContact: true, allowLinks: true });
+            return (
+              <span className="font-medium">
+                {l.name}
+                {flags.map((f) => (
+                  <Badge key={f} tone="bad">⚠ {MOD_FLAG_LABEL[f]}</Badge>
+                ))}
+              </span>
+            );
+          },
+        },
         { key: 'role', label: 'Wants', render: (l) => `${l.intent} ${l.role}` },
         { key: 'sector', label: 'Sector' },
         { key: 'status', label: 'Status', render: (l) => <Badge tone={l.status === 'approved' ? 'good' : l.status === 'pending' ? 'warn' : 'bad'}>{l.status}</Badge> },
