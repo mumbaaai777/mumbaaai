@@ -68,6 +68,10 @@ export function JobsPage() {
         { key: 'whatsapp_number', label: 'WhatsApp (e.g. 919800000000)', type: 'text', required: true, half: true },
         { key: 'status', label: 'Status', type: 'select', options: opt(['active', 'draft', 'closed']), required: true, half: true },
         { key: 'sponsored', label: 'Sponsored', type: 'checkbox', help: 'Pin as sponsored' },
+        { key: 'walk_in', label: 'Walk-in interview', type: 'checkbox', help: 'Show in the Walk-ins section' },
+        { key: 'walkin_date', label: 'Walk-in date', type: 'date', half: true },
+        { key: 'walkin_time', label: 'Walk-in time (e.g. 10 AM - 4 PM)', type: 'text', half: true },
+        { key: 'walkin_venue', label: 'Walk-in venue (full address)', type: 'text' },
         { key: 'description', label: 'Description', type: 'textarea' },
       ]}
       defaults={() => ({ job_type: 'full_time', zone: 'western_suburbs', status: 'active', sponsored: false, posted_at: new Date().toISOString() })}

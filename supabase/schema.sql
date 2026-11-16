@@ -49,6 +49,7 @@ create table if not exists public.jobs (
   salary_min_inr numeric, salary_max_inr numeric, description text, whatsapp_number text not null,
   sponsored boolean not null default false, status text not null default 'active', posted_at timestamptz not null default now()
 );
+alter table public.jobs add column if not exists walk_in boolean not null default false, add column if not exists walkin_date date, add column if not exists walkin_time text, add column if not exists walkin_venue text;
 select public._admin_policies('jobs');
 drop policy if exists "public jobs" on public.jobs;
 create policy "public jobs" on public.jobs for select to anon, authenticated using (status = 'active');

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { MapPin, MessageCircle, BadgeCheck } from 'lucide-react';
+import { MapPin, MessageCircle, BadgeCheck, CalendarDays, Clock, Navigation } from 'lucide-react';
 import { JOB_TYPES, ZONES, type Job, type JobType, type ZoneId } from '@mumbaaai/shared';
 import { useI18n } from '../lib/i18n';
 import { useZone } from '../lib/zone';
@@ -52,6 +52,10 @@ export default function Jobs() {
   const money = useMemo(() => new Intl.NumberFormat(locale, { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }), [locale]);
   const date = useMemo(() => new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' }), [locale]);
 
+  const today = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
+  const walkins = (rows ?? [])
+    .filter((j) => j.walk_in && (!j.walkin_date || j.walkin_date >= today) && (zone === 'all' || j.zone === zone) && (role === 'all' || roleMatch(j.title, role)))
+    .sort((a, b) => (a.walkin_date ?? '9').localeCompare(b.walkin_date ?? '9'));
   const list = (rows ?? []).filter(
     (j) =>
       (role === 'all' || roleMatch(j.title, role)) &&
@@ -195,6 +199,61 @@ export default function Jobs() {
           </AnimatePresence>
         </motion.ul>
       )}
+      <section className="mt-8" aria-labelledby="walkins">
+        <div className="flex items-end justify-between gap-3 pb-3">
+          <h2 id="walkins" className="text-2xl font-semibold tracking-tight text-ink">{t.jobs.walkins}</h2>
+          <span className="tnum pb-1 text-sm text-muted">{walkins.length}</span>
+        </div>
+        {walkins.length === 0 ? (
+          <div className="card p-6 text-center text-sm text-muted">{t.jobs.walkinsNone}</div>
+        ) : (
+          <ul className="grid gap-3 md:grid-cols-2">
+            {walkins.map((j) => (
+              <li key={`w-${j.id}`} className="card flex flex-col border-l-4 border-marigold p-4">
+                <p className="text-[16px] font-semibold leading-snug text-ink">{j.title}</p>
+                <p className="mt-0.5 text-sm text-ink-soft">
+                  {j.company} · {t.jobs.types[j.job_type]}
+                </p>
+                <div className="mt-3 grid gap-1 text-sm text-ink">
+                  {j.walkin_date && (
+                    <span className="inline-flex items-center gap-1.5 font-semibold">
+                      <CalendarDays size={14} className="text-marigold-ink" /> {new Intl.DateTimeFormat(locale, { weekday: 'short', day: 'numeric', month: 'short' }).format(new Date(j.walkin_date + 'T00:00:00+05:30'))}
+                    </span>
+                  )}
+                  {j.walkin_time && (
+                    <span className="inline-flex items-center gap-1.5">
+                      <Clock size={14} className="text-marigold-ink" /> {j.walkin_time}
+                    </span>
+                  )}
+                  <span className="inline-flex items-start gap-1.5 text-ink-soft">
+                    <MapPin size={14} className="mt-0.5 shrink-0 text-marigold-ink" /> {j.walkin_venue || `${j.locality ? `${j.locality}, ` : ''}${t.zones[j.zone]}`}
+                  </span>
+                </div>
+                <div className="mt-4 flex gap-2">
+                  {j.walkin_venue && (
+                    <a
+                      href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(j.walkin_venue)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-line-strong px-3 py-2.5 text-sm font-semibold text-ink"
+                    >
+                      <Navigation size={15} /> {t.jobs.directions}
+                    </a>
+                  )}
+                  <a
+                    href={waLink(j, f(t.jobs.waText, { title: j.title }))}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[#1F8F4E] px-3 py-2.5 text-sm font-semibold text-white"
+                  >
+                    <MessageCircle size={15} /> {t.jobs.ask}
+                  </a>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
       <Link to="/business" className="card mt-6 flex items-center justify-between gap-3 bg-accent-soft p-4">
         <span>
           <span className="eyebrow">{t.business.eyebrow}</span>

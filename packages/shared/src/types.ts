@@ -85,6 +85,10 @@ export interface Job {
   status: 'active' | 'closed' | 'draft';
   posted_at: string;
   sample?: boolean;
+  walk_in?: boolean | null;
+  walkin_date?: string | null; // YYYY-MM-DD
+  walkin_time?: string | null; // e.g. 10:00 AM - 4:00 PM
+  walkin_venue?: string | null;
 }
 
 export type AlertSeverity = 'info' | 'warning' | 'critical';
