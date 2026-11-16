@@ -109,10 +109,10 @@ function Planner() {
                         )}
                         {s.line !== 'walk' && openSeg === `${from}-${to}-${i}` && (
                           <motion.ol initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="mt-2 space-y-1 overflow-hidden border-l-2 pl-3 text-sm text-ink-soft" style={{ borderColor: lineColor(s.line) }}>
-                            {[...(s.via ?? []), s.to].map((st, k, arr) => (
+                            {(s.via ?? []).map((st, k) => (
                               <li key={st} className="flex items-center gap-2">
                                 <span className="tnum w-5 text-right text-xs text-muted">{k + 1}</span>
-                                <span className={k === arr.length - 1 ? 'font-semibold text-ink' : ''}>{st}</span>
+                                <span>{st}</span>
                               </li>
                             ))}
                           </motion.ol>
