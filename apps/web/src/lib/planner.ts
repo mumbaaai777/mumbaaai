@@ -12,6 +12,7 @@ export interface Segment {
   stops: number;
   minutes: number;
   towards: string; // terminal in the direction of travel
+  via?: string[]; // stations in between
 }
 export interface Plan {
   segments: Segment[];
@@ -117,6 +118,7 @@ export function planRoute(from: string, to: string): Plan | null {
       stops: j - i,
       minutes: Math.round((j - i) * line.minutesPerStop),
       towards: forward ? br.stations[br.stations.length - 1] : br.stations[0],
+      via: path.slice(i + 1, j).map((n) => n.split('|')[0]),
     });
     i = j;
   }

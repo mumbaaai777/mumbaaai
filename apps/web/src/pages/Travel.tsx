@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowDownUp, ArrowUpRight, Footprints, Clock, Send, CheckCircle2 } from 'lucide-react';
+import { ArrowDownUp, ArrowUpRight, ChevronDown, Footprints, Clock, Send, CheckCircle2 } from 'lucide-react';
 import { ZONES, type ListenerReport, type ReportKind, type ZoneId } from '@mumbaaai/shared';
 import { useI18n } from '../lib/i18n';
 import { useZone } from '../lib/zone';
@@ -17,6 +17,7 @@ function Planner() {
   const { t } = useI18n();
   const [from, setFrom] = useState('Borivali');
   const [to, setTo] = useState('Churchgate');
+  const [openSeg, setOpenSeg] = useState<string | null>(null);
   const valid = ALL_STATIONS.includes(from) && ALL_STATIONS.includes(to);
   const plan = useMemo(() => (valid ? planRoute(from, to) : null), [from, to, valid]);
   const firstRide = plan?.segments.find((s) => s.line !== 'walk');
@@ -81,9 +82,16 @@ function Planner() {
                             </span>
                           ) : (
                             <>
-                              <span className="font-semibold" style={{ color: lineColor(s.line) }}>
+                              <button
+                                type="button"
+                                onClick={() => setOpenSeg((o) => (o === `${from}-${to}-${i}` ? null : `${from}-${to}-${i}`))}
+                                aria-expanded={openSeg === `${from}-${to}-${i}`}
+                                className="inline-flex items-center gap-1 font-semibold"
+                                style={{ color: lineColor(s.line) }}
+                              >
                                 {t.travel.lines[s.line]}
-                              </span>
+                                <ChevronDown size={15} className={`transition-transform ${openSeg === `${from}-${to}-${i}` ? 'rotate-180' : ''}`} />
+                              </button>
                               <span>→ {s.towards}</span>
                               <span className="tnum">
                                 · {s.stops} {t.travel.stops} · {s.minutes} {t.common.minutesShort}
@@ -91,6 +99,16 @@ function Planner() {
                             </>
                           )}
                         </p>
+                        {s.line !== 'walk' && openSeg === `${from}-${to}-${i}` && (
+                          <motion.ol initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="mt-2 space-y-1 overflow-hidden border-l-2 pl-3 text-sm text-ink-soft" style={{ borderColor: lineColor(s.line) }}>
+                            {[...(s.via ?? []), s.to].map((st, k, arr) => (
+                              <li key={st} className="flex items-center gap-2">
+                                <span className="tnum w-5 text-right text-xs text-muted">{k + 1}</span>
+                                <span className={k === arr.length - 1 ? 'font-semibold text-ink' : ''}>{st}</span>
+                              </li>
+                            ))}
+                          </motion.ol>
+                        )}
                         {i === plan.segments.length - 1 && <p className="mt-3 font-semibold text-ink">{s.to}</p>}
                       </div>
                     </li>
