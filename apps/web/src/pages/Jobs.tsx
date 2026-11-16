@@ -10,7 +10,26 @@ import { Page } from '../components/motion';
 import { Chip, SampleBadge, Skeleton, inputCls } from '../components/ui';
 import { AdSlot } from '../components/AdSlot';
 
+// Standard roles always offered in the Job role filter (listing titles are added on top).
+const JOB_ROLES = [
+  'Sales Executive', 'Sales Manager', 'Business Development Executive', 'Business Development Manager (BDM)', 'Relationship Manager', 'Telecaller', 'Customer Support Executive', 'Field Sales Executive', 'Marketing Executive', 'Digital Marketing Executive', 'Social Media Manager', 'Content Writer',
+  'Full-stack Developer', 'Frontend Developer', 'Backend Developer', 'Mobile App Developer', 'Software Engineer', 'Data Analyst', 'UI/UX Designer', 'Graphic Designer', 'IT Support Engineer', 'QA Tester',
+  'Accountant', 'Accounts Executive', 'HR Executive', 'HR Manager', 'Recruiter', 'Office Administrator', 'Receptionist', 'Data Entry Operator', 'Back Office Executive', 'Operations Executive', 'Store Manager', 'Retail Sales Associate',
+  'Delivery Executive', 'Driver', 'Security Guard', 'Housekeeping', 'Cook / Chef', 'Waiter / Steward', 'Electrician', 'Plumber', 'Technician', 'Warehouse Associate', 'Nurse', 'Pharmacist', 'Teacher / Tutor', 'Beautician',
+];
+
 const SALARY_STEPS = [0, 10000, 15000, 20000, 25000, 30000];
+
+/** A listing matches a role if its title contains the role name (or its short form, e.g. BDM). */
+function roleMatch(title: string, role: string) {
+  const t = title.toLowerCase();
+  return role
+    .toLowerCase()
+    .split(/\s*[/()]\s*/)
+    .map((x) => x.trim())
+    .filter((x) => x.length > 2)
+    .some((x) => t.includes(x));
+}
 
 export function waLink(job: Job, text: string) {
   const num = job.whatsapp_number?.replace(/\D/g, '');
@@ -25,14 +44,17 @@ export default function Jobs() {
   const [zone, setZone] = useState<ZoneId | 'all'>(myZone);
   const [type, setType] = useState<JobType | 'all'>('all');
   const [role, setRole] = useState('all');
-  const roles = useMemo(() => Array.from(new Set((rows ?? []).map((j) => j.title.trim()))).sort((a, b) => a.localeCompare(b)), [rows]);
+  const roles = useMemo(() => {
+    const extra = (rows ?? []).map((j) => j.title.trim()).filter((t) => !JOB_ROLES.some((r) => roleMatch(t, r)));
+    return [...JOB_ROLES, ...Array.from(new Set(extra))].sort((a, b) => a.localeCompare(b));
+  }, [rows]);
   const [minSalary, setMinSalary] = useState(0);
   const money = useMemo(() => new Intl.NumberFormat(locale, { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }), [locale]);
   const date = useMemo(() => new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' }), [locale]);
 
   const list = (rows ?? []).filter(
     (j) =>
-      (role === 'all' || j.title.trim() === role) &&
+      (role === 'all' || roleMatch(j.title, role)) &&
       (zone === 'all' || j.zone === zone) &&
       (type === 'all' || j.job_type === type) &&
       (minSalary === 0 || (j.salary_max_inr ?? j.salary_min_inr ?? 0) >= minSalary),
