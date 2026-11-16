@@ -2,7 +2,7 @@
 // (enforced by the `Dict` type), so a missing translation fails the build.
 export const en = {
   meta: { langName: 'English', tagline: 'Your city. Your Aai.' },
-  nav: { home: 'Home', travel: 'Train', radio: 'Radio', jobs: 'Jobs', ask: 'Ask Aai' },
+  nav: { home: 'Home', travel: 'Local & Metro', radio: 'Radio', jobs: 'Jobs', ask: 'Ask Aai' },
   common: {
     sample: 'Sample',
     sampleData: 'Sample data',
@@ -158,7 +158,16 @@ export const en = {
   contact: { title: 'Contact MumbaAai', hint: 'Advertise, partner or send news', call: 'Call', whatsapp: 'WhatsApp' },
   paper: { title: 'Mumbaa Aai News', tagline: 'Your city\'s paper, in your language', briefs: 'In brief', opinion: 'Opinion', source: 'Source', more: 'Read full story', less: 'Show less', empty: 'No edition for this day yet.', prev: 'Previous day', next: 'Next day', today: 'Today\'s paper', cta: 'Read today\'s edition', sections: { city: 'City', transport: 'Transport', civic: 'Civic', business: 'Business', entertainment: 'Entertainment', sports: 'Sports', weather: 'Weather', opinion: 'Opinion' } },
   travel: {
-    title: 'Train',
+    title: 'Local Train & Metro',
+    metroTT: 'Metro timetable',
+    peakNow: 'Peak hours now: trains run more often',
+    offPeakNow: 'Off-peak now',
+    first: 'First train',
+    last: 'Last train',
+    every: 'Every (peak / off-peak)',
+    nextApprox: 'Next (approx.)',
+    firstAt: 'First train at',
+    metroTTNote: 'Official first and last train times and frequencies published by MMRDA, MMRCL and Mumbai Metro One. Exact departures vary; check station displays.',
     trains: 'Local trains',
     metro: 'Metro',
     planner: 'Plan a journey',

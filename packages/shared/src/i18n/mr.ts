@@ -2,7 +2,7 @@ import type { Dict } from './en';
 
 export const mr: Dict = {
   meta: { langName: 'मराठी', tagline: 'तुमचं शहर. तुमची आई.' },
-  nav: { home: 'होम', travel: 'ट्रेन', radio: 'रेडिओ', jobs: 'नोकऱ्या', ask: 'आईला विचारा' },
+  nav: { home: 'होम', travel: 'लोकल व मेट्रो', radio: 'रेडिओ', jobs: 'नोकऱ्या', ask: 'आईला विचारा' },
   common: {
     sample: 'नमुना',
     sampleData: 'नमुना डेटा',
@@ -158,7 +158,16 @@ export const mr: Dict = {
   contact: { title: 'MumbaAai शी संपर्क', hint: 'जाहिरात, भागीदारी किंवा बातमी पाठवा', call: 'कॉल', whatsapp: 'WhatsApp' },
   paper: { title: 'मुंबा आई न्यूज', tagline: 'तुमच्या शहराचं वर्तमानपत्र, तुमच्या भाषेत', briefs: 'थोडक्यात', opinion: 'मत', source: 'स्रोत', more: 'संपूर्ण बातमी वाचा', less: 'कमी दाखवा', empty: 'या दिवसाची आवृत्ती अजून नाही.', prev: 'मागचा दिवस', next: 'पुढचा दिवस', today: 'आजचं वर्तमानपत्र', cta: 'आजची आवृत्ती वाचा', sections: { city: 'शहर', transport: 'वाहतूक', civic: 'नागरी', business: 'व्यापार', entertainment: 'मनोरंजन', sports: 'क्रीडा', weather: 'हवामान', opinion: 'मत' } },
   travel: {
-    title: 'ट्रेन',
+    title: 'लोकल ट्रेन व मेट्रो',
+    metroTT: 'मेट्रो वेळापत्रक',
+    peakNow: 'आता गर्दीची वेळ: गाड्या जास्त वेळा',
+    offPeakNow: 'आता कमी गर्दीची वेळ',
+    first: 'पहिली गाडी',
+    last: 'शेवटची गाडी',
+    every: 'दर (गर्दी / कमी गर्दी)',
+    nextApprox: 'पुढील (अंदाजे)',
+    firstAt: 'पहिली गाडी',
+    metroTTNote: 'पहिली-शेवटची गाडी आणि वारंवारता MMRDA, MMRCL व मुंबई मेट्रो वनची अधिकृत माहिती. नेमकी वेळ स्टेशनवरील डिस्प्लेवर पाहा.',
     trains: 'लोकल ट्रेन',
     metro: 'मेट्रो',
     planner: 'प्रवासाचं नियोजन',

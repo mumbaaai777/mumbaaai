@@ -2,7 +2,7 @@ import type { Dict } from './en';
 
 export const hi: Dict = {
   meta: { langName: 'हिन्दी', tagline: 'आपका शहर। आपकी आई।' },
-  nav: { home: 'होम', travel: 'ट्रेन', radio: 'रेडियो', jobs: 'नौकरियाँ', ask: 'आई से पूछें' },
+  nav: { home: 'होम', travel: 'लोकल और मेट्रो', radio: 'रेडियो', jobs: 'नौकरियाँ', ask: 'आई से पूछें' },
   common: {
     sample: 'नमूना',
     sampleData: 'नमूना डेटा',
@@ -158,7 +158,16 @@ export const hi: Dict = {
   contact: { title: 'MumbaAai से संपर्क करें', hint: 'विज्ञापन, पार्टनरशिप या ख़बर भेजें', call: 'कॉल', whatsapp: 'WhatsApp' },
   paper: { title: 'मुंबा आई न्यूज़', tagline: 'आपके शहर का अख़बार, आपकी भाषा में', briefs: 'संक्षेप में', opinion: 'विचार', source: 'स्रोत', more: 'पूरी ख़बर पढ़ें', less: 'कम दिखाएँ', empty: 'इस दिन का संस्करण अभी नहीं है।', prev: 'पिछला दिन', next: 'अगला दिन', today: 'आज का अख़बार', cta: 'आज का संस्करण पढ़ें', sections: { city: 'शहर', transport: 'यातायात', civic: 'नागरिक', business: 'व्यापार', entertainment: 'मनोरंजन', sports: 'खेल', weather: 'मौसम', opinion: 'विचार' } },
   travel: {
-    title: 'ट्रेन',
+    title: 'लोकल ट्रेन और मेट्रो',
+    metroTT: 'मेट्रो समय सारणी',
+    peakNow: 'अभी पीक आवर्स: ट्रेनें जल्दी-जल्दी',
+    offPeakNow: 'अभी नॉन-पीक',
+    first: 'पहली ट्रेन',
+    last: 'आख़िरी ट्रेन',
+    every: 'हर (पीक / नॉन-पीक)',
+    nextApprox: 'अगली (अनुमानित)',
+    firstAt: 'पहली ट्रेन',
+    metroTTNote: 'पहली-आख़िरी ट्रेन और अंतराल MMRDA, MMRCL और मुंबई मेट्रो वन के आधिकारिक आंकड़े हैं। सटीक समय स्टेशन डिस्प्ले पर देखें।',
     trains: 'लोकल ट्रेन',
     metro: 'मेट्रो',
     planner: 'सफ़र की योजना',

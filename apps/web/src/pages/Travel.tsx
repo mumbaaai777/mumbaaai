@@ -149,6 +149,57 @@ function Planner() {
   );
 }
 
+// Official published timings (MMOPL/RMM Line 1, MMRDA/MMMOCL press release 8 Apr 2026 for 2A, 7+9, 2B; MMRCL for Line 3).
+// Headways are the operators' stated peak/off-peak intervals; exact departures vary, so "next" times are estimates.
+const METRO_TT: { id: string; name: string; color: string; route: string; first: string; last: string; peak: number; off: number; note?: string }[] = [
+  { id: 'm1', name: 'Line 1 · Blue', color: '#2E86C1', route: 'Versova ⇄ Ghatkopar', first: '05:30', last: '23:25', peak: 3.5, off: 7, note: 'Last from Ghatkopar 23:50 · weekends differ' },
+  { id: 'm2a', name: 'Line 2A · Yellow', color: '#D4AC0D', route: 'Dahisar East ⇄ Andheri West', first: '05:50', last: '23:00', peak: 6, off: 9, note: 'Last trains 22:35 to 23:00' },
+  { id: 'm3', name: 'Line 3 · Aqua', color: '#17A2B8', route: 'Aarey JVLR ⇄ Cuffe Parade', first: '05:55', last: '22:30', peak: 5, off: 10, note: 'First from Aarey JVLR, last from Cuffe Parade' },
+  { id: 'm7', name: 'Line 7 + 9 · Red', color: '#E74C3C', route: 'Gundavali ⇄ Kashigaon', first: '05:50', last: '23:00', peak: 5.8, off: 9 },
+  { id: 'm2b', name: 'Line 2B · Yellow', color: '#D4AC0D', route: 'Mandale ⇄ Diamond Garden', first: '06:00', last: '22:30', peak: 9.5, off: 9.5 },
+];
+const toMin = (hhmm: string) => Number(hhmm.slice(0, 2)) * 60 + Number(hhmm.slice(3));
+const fmtMin = (m: number) => `${String(Math.floor(m / 60) % 24).padStart(2, '0')}:${String(Math.round(m) % 60).padStart(2, '0')}`;
+
+function MetroTimetable() {
+  const { t } = useI18n();
+  const now = new Date();
+  const ist = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
+  const mins = ist.getHours() * 60 + ist.getMinutes();
+  const weekday = ist.getDay() >= 1 && ist.getDay() <= 5;
+  const peak = weekday && ((mins >= 8 * 60 && mins < 11 * 60) || (mins >= 17 * 60 && mins < 21 * 60));
+  const next = (l: (typeof METRO_TT)[number]) => {
+    const f = toMin(l.first), e = toMin(l.last), h = peak ? l.peak : l.off;
+    if (mins > e || mins < f) return `${t.travel.firstAt} ${l.first}`;
+    const k = Math.ceil((mins + 1 - f) / h);
+    return [0, 1, 2].map((i) => f + (k + i) * h).filter((x) => x <= e).map(fmtMin).join(' · ') || `${t.travel.firstAt} ${l.first}`;
+  };
+  return (
+    <section className="card p-4">
+      <SectionTitle title={t.travel.metroTT} hint={peak ? t.travel.peakNow : t.travel.offPeakNow} />
+      <ul className="divide-y divide-line">
+        {METRO_TT.map((l) => (
+          <li key={l.id} className="py-3 first:pt-0 last:pb-0">
+            <div className="flex items-center gap-2">
+              <span className="h-2.5 w-2.5 rounded-full" style={{ background: l.color }} />
+              <span className="font-semibold text-ink">{l.name}</span>
+              <span className="truncate text-sm text-muted">{l.route}</span>
+            </div>
+            <div className="tnum mt-1.5 grid grid-cols-3 gap-2 text-sm">
+              <span><span className="block text-xs text-muted">{t.travel.first}</span>{l.first}</span>
+              <span><span className="block text-xs text-muted">{t.travel.last}</span>{l.last}</span>
+              <span><span className="block text-xs text-muted">{t.travel.every}</span>{l.peak === l.off ? `${l.peak}` : `${l.peak} / ${l.off}`} {t.common.minutesShort}</span>
+            </div>
+            <p className="tnum mt-1.5 text-sm text-ink-soft"><span className="text-xs text-muted">{t.travel.nextApprox}: </span>{next(l)}</p>
+            {l.note && <p className="mt-0.5 text-xs text-muted">{l.note}</p>}
+          </li>
+        ))}
+      </ul>
+      <p className="mt-3 text-xs text-muted">{t.travel.metroTTNote}</p>
+    </section>
+  );
+}
+
 function LinesBrowser() {
   const { t } = useI18n();
   const [kind, setKind] = useState<'local' | 'metro'>('local');
@@ -371,6 +422,9 @@ export default function Travel() {
       <Stagger className="grid gap-5 md:grid-cols-2 md:items-start">
         <Item>
           <Planner />
+        </Item>
+        <Item>
+          <MetroTimetable />
         </Item>
         <Item>
           <LinesBrowser />
