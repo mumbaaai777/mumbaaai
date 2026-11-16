@@ -1,7 +1,7 @@
 # Generates supabase/functions/api/index.ts (one file, for the Supabase dashboard editor) from workers/api/src.
 import re
 src='workers/api/src/'
-rss=open(src+'rss.ts').read(); prompt=open(src+'prompt.ts').read(); idx=open(src+'index.ts').read()
+rss=open(src+'rss.ts').read(); prompt=open(src+'prompt.ts').read(); rail=open(src+'rail.ts').read(); idx=open(src+'index.ts').read()
 idx=re.sub(r"^import .*\n","",idx,flags=re.M)
 i=idx.index('// ---------- router ----------'); router=idx[i:]; idx=idx[:i]
 router=router.replace("export default {\n  async fetch(","const handler = {\n  async fetch(")
@@ -20,7 +20,7 @@ Deno.serve((req: Request) => {
   return handler.fetch(req, env);
 });
 """
-out="// MumbaAai API as one Supabase Edge Function (generated from workers/api/src by scripts/gen-edge.py).\n"+rss.replace('export ','')+"\n"+prompt.replace('export ','')+"\n"+idx.replace('export ','')+router
+out="// MumbaAai API as one Supabase Edge Function (generated from workers/api/src by scripts/gen-edge.py).\n"+rss.replace('export ','')+"\n"+rail.replace('export ','')+"\n"+prompt.replace('export ','')+"\n"+idx.replace('export ','')+router
 out=out.replace("'Access-Control-Allow-Headers': 'Content-Type'","'Access-Control-Allow-Headers': 'Content-Type, authorization, apikey, x-client-info'")
 open('supabase/functions/api/index.ts','w').write(out)
 print('ok')

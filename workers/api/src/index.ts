@@ -4,6 +4,7 @@
 //   GET  /health → liveness + config check (never reveals secrets)
 import { FEEDS, parseFeed, type Headline } from './rss.ts';
 import { buildSystemPrompt } from './prompt.ts';
+import { findStations, findRoute, routeFacts } from './rail.ts';
 
 export interface Env {
   /** set automatically in Supabase Edge Functions; used to check the caller is an admin */
@@ -139,8 +140,13 @@ async function handleAsk(req: Request, env: Env): Promise<Response> {
   const lang = typeof body.lang === 'string' ? body.lang.slice(0, 10) : 'en';
   const zone = typeof body.zone === 'string' ? body.zone.slice(0, 40) : undefined;
 
+  const pair = findStations(cleaned[cleaned.length - 1].text);
+  const route = pair ? findRoute(pair.from, pair.to) : null;
+  const railNote = route
+    ? `VERIFIED LOCAL TRAIN ROUTE (computed from the official station order; follow it exactly, never contradict it, never add other interchanges):\n${routeFacts(route)}\nIn your answer give each leg: line, where to board, which train (towards ...), where to change, and the platform only where given above (otherwise say to check the indicator boards). Do not list the in-between stations; the app shows them when the user taps "Show stations in between". You may add one road or Metro alternative only if you are sure of it.`
+    : '';
   const payload = {
-    systemInstruction: { parts: [{ text: buildSystemPrompt(lang, zone) }] },
+    systemInstruction: { parts: [{ text: buildSystemPrompt(lang, zone) + (railNote ? '\n\n' + railNote : '') }] },
     contents: cleaned.map((m) => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: m.text }] })),
     generationConfig: { temperature: 0.6, maxOutputTokens: 800 },
   };
@@ -161,7 +167,7 @@ async function handleAsk(req: Request, env: Env): Promise<Response> {
     .join('')
     .trim();
   if (!text) return json({ error: 'empty_answer', blockReason: data.promptFeedback?.blockReason ?? null }, 502, req, env);
-  return json({ answer: text, model: usedModel, lang }, 200, req, env);
+  return json({ answer: text, model: usedModel, lang, route }, 200, req, env);
 }
 
 // ---------- /translate (admins only) ----------

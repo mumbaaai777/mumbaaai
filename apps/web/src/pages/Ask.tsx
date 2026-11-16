@@ -3,7 +3,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ArrowUp, RotateCcw, PlugZap } from 'lucide-react';
 import { useI18n } from '../lib/i18n';
 import { useZone } from '../lib/zone';
-import { askAai } from '../lib/api';
+import { askAai, type RailRoute } from '../lib/api';
 import { env, asset } from '../lib/env';
 import { Page } from '../components/motion';
 import { AdSlot } from '../components/AdSlot';
@@ -13,6 +13,7 @@ interface Msg {
   role: 'user' | 'assistant';
   text: string;
   kind?: 'error' | 'notice';
+  route?: RailRoute | null;
 }
 const KEY = 'mumbaaai.chat';
 
@@ -72,6 +73,46 @@ function Typewriter({ text, onTick }: { text: string; onTick: () => void }) {
   );
 }
 
+const RL: Record<string, { show: string; hide: string; board: string; change: string; arrive: string; towards: string; pf: string; pfCheck: string; stops: string }> = {
+  en: { show: 'Show stations in between', hide: 'Hide stations', board: 'Board at', change: 'Change at', arrive: 'Get off at', towards: 'towards', pf: 'Platform', pfCheck: 'Platform: check indicator board', stops: 'stops' },
+  hi: { show: 'बीच के स्टेशन दिखाएं', hide: 'स्टेशन छुपाएं', board: 'यहां से चढ़ें', change: 'यहां ट्रेन बदलें', arrive: 'यहां उतरें', towards: 'की ओर', pf: 'प्लेटफॉर्म', pfCheck: 'प्लेटफॉर्म: इंडिकेटर बोर्ड देखें', stops: 'स्टॉप' },
+  mr: { show: 'मधली स्टेशन्स दाखवा', hide: 'स्टेशन्स लपवा', board: 'इथून चढा', change: 'इथे गाडी बदला', arrive: 'इथे उतरा', towards: 'च्या दिशेने', pf: 'फलाट', pfCheck: 'फलाट: इंडिकेटर बोर्ड पाहा', stops: 'थांबे' },
+};
+
+/** Verified train route from the API, with an optional list of every station in between. */
+function RouteCard({ route, lang }: { route: RailRoute; lang: string }) {
+  const [open, setOpen] = useState(false);
+  const L = RL[lang] ?? RL.en;
+  return (
+    <div className="mt-3 rounded-xl border border-line-strong p-3 text-sm">
+      <div className="mb-2 font-semibold text-ink">🚆 {route.from} → {route.to}</div>
+      <ol className="space-y-3">
+        {route.legs.map((leg, i) => (
+          <li key={i} className="border-l-2 border-marigold pl-3">
+            <div className="font-medium text-ink">{leg.line} · {L.towards} {leg.towards}</div>
+            <div className="text-muted">
+              {i === 0 ? L.board : L.change} <strong>{leg.board}</strong> · {leg.platform ? `${L.pf} ${leg.platform}` : L.pfCheck}
+            </div>
+            {open && leg.stops.length > 0 && (
+              <ul className="my-1.5 space-y-0.5 pl-3 text-ink-soft">
+                {leg.stops.map((s) => (
+                  <li key={s} className="before:mr-2 before:text-marigold before:content-['•']">{s}</li>
+                ))}
+              </ul>
+            )}
+            <div className="text-muted">
+              {i === route.legs.length - 1 ? L.arrive : L.change} <strong>{leg.alight}</strong> · {leg.stops.length + 1} {L.stops}
+            </div>
+          </li>
+        ))}
+      </ol>
+      <button onClick={() => setOpen((v) => !v)} className="mt-3 rounded-full border border-line-strong px-3 py-1 text-xs text-ink-soft hover:border-marigold">
+        {open ? L.hide : L.show}
+      </button>
+    </div>
+  );
+}
+
 export default function Ask() {
   const { t, lang } = useI18n();
   const { zone } = useZone();
@@ -106,7 +147,7 @@ export default function Ask() {
     const id = crypto.randomUUID();
     if (r.ok) {
       setFresh(id);
-      setMsgs((m) => [...m, { id, role: 'assistant', text: r.answer }]);
+      setMsgs((m) => [...m, { id, role: 'assistant', text: r.answer, route: r.route }]);
     } else {
       const textByReason = { not_connected: t.ask.notConnected, rate_limited: t.ask.rateLimited, error: t.ask.error };
       setMsgs((m) => [...m, { id, role: 'assistant', text: textByReason[r.reason], kind: r.reason === 'not_connected' ? 'notice' : 'error' }]);
@@ -171,6 +212,7 @@ export default function Ask() {
                     }`}
                   >
                     {m.id === fresh && !m.kind ? <Typewriter text={m.text} onTick={scroll} /> : <Rich text={m.text} />}
+                    {m.route && m.route.legs.length > 0 && <RouteCard route={m.route} lang={lang} />}
                   </div>
                 </motion.div>
               ),

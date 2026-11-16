@@ -42,7 +42,9 @@ export async function getNews(limit = 12): Promise<NewsResult> {
   return { items: merged.slice(0, limit), live };
 }
 
-export type AskResult = { ok: true; answer: string } | { ok: false; reason: 'not_connected' | 'rate_limited' | 'error' };
+export interface RailLeg { line: string; board: string; alight: string; towards: string; stops: string[]; platform?: string }
+export interface RailRoute { from: string; to: string; legs: RailLeg[]; totalStops: number }
+export type AskResult = { ok: true; answer: string; route?: RailRoute | null } | { ok: false; reason: 'not_connected' | 'rate_limited' | 'error' };
 
 export async function askAai(messages: { role: 'user' | 'assistant'; text: string }[], lang: string, zone: string): Promise<AskResult> {
   if (!env.apiUrl) return { ok: false, reason: 'not_connected' };
@@ -58,8 +60,8 @@ export async function askAai(messages: { role: 'user' | 'assistant'; text: strin
       if (j.error === 'ai_not_configured') return { ok: false, reason: 'not_connected' };
     }
     if (!res.ok) return { ok: false, reason: 'error' };
-    const j = (await res.json()) as { answer: string };
-    return { ok: true, answer: j.answer };
+    const j = (await res.json()) as { answer: string; route?: RailRoute | null };
+    return { ok: true, answer: j.answer, route: j.route ?? null };
   } catch {
     return { ok: false, reason: 'error' };
   }
