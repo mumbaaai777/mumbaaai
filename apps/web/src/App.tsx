@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { HashRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { HashRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { AnimatePresence, MotionConfig } from 'framer-motion';
 import { currentAndNext, type RadioShow } from '@mumbaaai/shared';
 import { I18nProvider } from './lib/i18n';
@@ -25,7 +25,8 @@ function Routed() {
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={<Home />} />
-            <Route path="/travel" element={<Travel />} />
+            <Route path="/train" element={<Travel />} />
+            <Route path="/travel" element={<Navigate to="/train" replace />} />
             <Route path="/radio" element={<Radio />} />
             <Route path="/jobs" element={<Jobs />} />
             <Route path="/ask" element={<Ask />} />

@@ -12,7 +12,7 @@ import { spring } from './motion';
 
 const TABS = [
   { to: '/', key: 'home', icon: Home },
-  { to: '/travel', key: 'travel', icon: TrainFront },
+  { to: '/train', key: 'travel', icon: TrainFront },
   { to: '/radio', key: 'radio', icon: Radio },
   { to: '/jobs', key: 'jobs', icon: BriefcaseBusiness },
   { to: '/ask', key: 'ask', icon: Sparkles },
