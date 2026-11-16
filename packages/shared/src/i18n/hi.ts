@@ -2,7 +2,7 @@ import type { Dict } from './en';
 
 export const hi: Dict = {
   meta: { langName: 'हिन्दी', tagline: 'आपका शहर। आपकी आई।' },
-  nav: { home: 'होम', travel: 'सफ़र', radio: 'रेडियो', jobs: 'नौकरियाँ', ask: 'आई से पूछें' },
+  nav: { home: 'होम', travel: 'ट्रेन', radio: 'रेडियो', jobs: 'नौकरियाँ', ask: 'आई से पूछें' },
   common: {
     sample: 'नमूना',
     sampleData: 'नमूना डेटा',
@@ -158,7 +158,7 @@ export const hi: Dict = {
   contact: { title: 'MumbaAai से संपर्क करें', hint: 'विज्ञापन, पार्टनरशिप या ख़बर भेजें', call: 'कॉल', whatsapp: 'WhatsApp' },
   paper: { title: 'मुंबा आई न्यूज़', tagline: 'आपके शहर का अख़बार, आपकी भाषा में', briefs: 'संक्षेप में', opinion: 'विचार', source: 'स्रोत', more: 'पूरी ख़बर पढ़ें', less: 'कम दिखाएँ', empty: 'इस दिन का संस्करण अभी नहीं है।', prev: 'पिछला दिन', next: 'अगला दिन', today: 'आज का अख़बार', cta: 'आज का संस्करण पढ़ें', sections: { city: 'शहर', transport: 'यातायात', civic: 'नागरिक', business: 'व्यापार', entertainment: 'मनोरंजन', sports: 'खेल', weather: 'मौसम', opinion: 'विचार' } },
   travel: {
-    title: 'सफ़र',
+    title: 'ट्रेन',
     trains: 'लोकल ट्रेन',
     metro: 'मेट्रो',
     planner: 'सफ़र की योजना',
