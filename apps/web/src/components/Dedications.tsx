@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Heart, Cake, PartyPopper, Music2, Sparkles, Send, CheckCircle2, MessageCircle } from 'lucide-react';
 import { DEDICATION_KINDS, fmt, type Dedication, type DedicationKind, type RadioShow } from '@mumbaaai/shared';
 import { db } from '../lib/data';
+import { abuseBlock } from '../lib/modmsg';
 import { env } from '../lib/env';
 import { useI18n } from '../lib/i18n';
 import { useTable } from '../lib/content';
@@ -22,7 +23,7 @@ const istTime = (iso?: string | null) =>
   iso ? new Date(iso).toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit', timeZone: 'Asia/Kolkata' }) : '';
 
 export function DedicationForm({ shows }: { shows: RadioShow[] }) {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const d = t.dedication;
   const [open, setOpen] = useState(false);
   const [kind, setKind] = useState<DedicationKind>('farmaish');
@@ -36,6 +37,8 @@ export function DedicationForm({ shows }: { shows: RadioShow[] }) {
     e.preventDefault();
     if (!f.from_name.trim() || !f.to_name.trim() || !f.song.trim() || !f.message.trim()) return setErr(d.required);
     if (!consent) return setErr(d.consent);
+    const bad = abuseBlock(lang, f.from_name, f.to_name, f.song, f.message, f.from_area);
+    if (bad) return setErr(bad);
     setErr(null);
     setState('sending');
     try {

@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Briefcase, MapPin, MessageCircle, Radio, Send, CheckCircle2, ShieldAlert, Globe } from 'lucide-react';
 import { BIZ_ROLES, BIZ_STAGES, ZONES, type BizIntent, type BizRole, type BizStage, type BusinessListing, type ZoneId } from '@mumbaaai/shared';
 import { db } from '../lib/data';
+import { abuseBlock } from '../lib/modmsg';
 import { useI18n } from '../lib/i18n';
 import { useTable } from '../lib/content';
 import { Page, Stagger, Item } from '../components/motion';
@@ -14,7 +15,7 @@ const wa = (l: BusinessListing) =>
   `https://wa.me/${l.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(`Hi ${l.founder}, I saw ${l.name} on MumbaAai Business Connect.`)}`;
 
 function PostForm({ onDone }: { onDone: () => void }) {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const b = t.business;
   const [intent, setIntent] = useState<BizIntent>('seeking');
   const [role, setRole] = useState<BizRole>('investor');
@@ -30,6 +31,8 @@ function PostForm({ onDone }: { onDone: () => void }) {
     if (phone.length === 10) phone = '91' + phone;
     if (!f.name.trim() || !f.founder.trim() || !f.sector.trim() || !f.pitch.trim() || phone.length < 11) return setErr(b.required);
     if (!consent) return setErr(b.consent);
+    const bad = abuseBlock(lang, f.name, f.founder, f.sector, f.pitch, f.ask);
+    if (bad) return setErr(bad);
     setErr(null);
     setState('sending');
     try {
