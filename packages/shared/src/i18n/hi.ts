@@ -187,7 +187,7 @@ export const hi: Dict = {
     trafficHint: 'किसी कॉरिडोर का लाइव ट्रैफ़िक Google Maps में खोलें।',
     reports: 'श्रोताओं की रिपोर्ट',
     noReports: 'अभी कोई स्वीकृत रिपोर्ट नहीं।',
-    lines: { western: 'वेस्टर्न', central: 'सेंट्रल', harbour: 'हार्बर', trans_harbour: 'ट्रांस-हार्बर', m1: 'मेट्रो 1', m2a: 'मेट्रो 2A', m3: 'मेट्रो 3 एक्वा', m7: 'मेट्रो 7' },
+    lines: { western: 'वेस्टर्न', central: 'सेंट्रल', harbour: 'हार्बर', trans_harbour: 'ट्रांस-हार्बर', m1: 'मेट्रो 1', m2a: 'मेट्रो 2A', m3: 'मेट्रो 3 एक्वा', m7: 'मेट्रो 7 + 9', m2b: 'मेट्रो 2B' },
     slow: 'धीमी',
     fast: 'तेज़',
     estTime: 'अनुमानित समय',

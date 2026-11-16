@@ -187,7 +187,7 @@ export const mr: Dict = {
     trafficHint: 'एखाद्या मार्गाची लाइव्ह वाहतूक Google Maps मध्ये उघडा.',
     reports: 'श्रोत्यांचे अहवाल',
     noReports: 'अजून कोणताही मंजूर अहवाल नाही.',
-    lines: { western: 'पश्चिम', central: 'मध्य', harbour: 'हार्बर', trans_harbour: 'ट्रान्स-हार्बर', m1: 'मेट्रो 1', m2a: 'मेट्रो 2A', m3: 'मेट्रो 3 ॲक्वा', m7: 'मेट्रो 7' },
+    lines: { western: 'पश्चिम', central: 'मध्य', harbour: 'हार्बर', trans_harbour: 'ट्रान्स-हार्बर', m1: 'मेट्रो 1', m2a: 'मेट्रो 2A', m3: 'मेट्रो 3 ॲक्वा', m7: 'मेट्रो 7 + 9', m2b: 'मेट्रो 2B' },
     slow: 'धीमी',
     fast: 'जलद',
     estTime: 'अंदाजे वेळ',

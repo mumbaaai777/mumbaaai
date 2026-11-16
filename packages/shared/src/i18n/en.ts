@@ -187,7 +187,7 @@ export const en = {
     trafficHint: 'Open live traffic for a corridor in Google Maps.',
     reports: 'Listener reports',
     noReports: 'No approved reports yet.',
-    lines: { western: 'Western', central: 'Central', harbour: 'Harbour', trans_harbour: 'Trans-Harbour', m1: 'Metro 1', m2a: 'Metro 2A', m3: 'Metro 3 Aqua', m7: 'Metro 7' },
+    lines: { western: 'Western', central: 'Central', harbour: 'Harbour', trans_harbour: 'Trans-Harbour', m1: 'Metro 1', m2a: 'Metro 2A', m3: 'Metro 3 Aqua', m7: 'Metro 7 + 9', m2b: 'Metro 2B' },
     slow: 'Slow',
     fast: 'Fast',
     estTime: 'Approx. time',

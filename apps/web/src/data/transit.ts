@@ -4,7 +4,7 @@
 // Identical names across lines are treated as interchanges by the planner.
 
 export type LineKind = 'local' | 'metro';
-export type LineId = 'western' | 'central' | 'harbour' | 'trans_harbour' | 'm1' | 'm2a' | 'm3' | 'm7';
+export type LineId = 'western' | 'central' | 'harbour' | 'trans_harbour' | 'm1' | 'm2a' | 'm3' | 'm7' | 'm2b';
 
 export interface Branch {
   name: string; // "CSMT – Kasara"
@@ -143,10 +143,17 @@ export const LINES: Line[] = [
     minutesPerStop: 2,
     branches: [
       {
-        name: 'Gundavali – Dahisar East',
-        stations: ['Gundavali', 'Mogra', 'Jogeshwari East', 'Goregaon East', 'Aarey', 'Dindoshi', 'Kurar', 'Akurli', 'Poisar', 'Magathane', 'Devipada', 'Rashtriya Udyan', 'Ovaripada', 'Dahisar East'],
+        name: 'Gundavali – Kashigaon (Line 7 + 9)',
+        stations: ['Gundavali', 'Mogra', 'Jogeshwari East', 'Goregaon East', 'Aarey', 'Dindoshi', 'Kurar', 'Akurli', 'Poisar', 'Magathane', 'Devipada', 'Rashtriya Udyan', 'Ovaripada', 'Dahisar East', 'Pandurang Wadi', 'Miragaon', 'Kashigaon'],
       },
     ],
+  },
+  {
+    id: 'm2b',
+    kind: 'metro',
+    color: '#B7950B',
+    minutesPerStop: 2.2,
+    branches: [{ name: 'Diamond Garden – Mandale (Phase 1)', stations: ['Diamond Garden', 'Shivaji Chowk', 'BSNL Metro', 'Mankhurd', 'Mandale'] }],
   },
 ];
 
@@ -154,6 +161,7 @@ export const LINES: Line[] = [
 export const WALK_LINKS: [string, string, number][] = [
   ['D N Nagar', 'Andheri West', 6],
   ['Western Express Highway', 'Gundavali', 5],
+  ['Chembur', 'Diamond Garden', 12],
 ];
 
 export const ALL_STATIONS: string[] = [...new Set(LINES.flatMap((l) => l.branches.flatMap((b) => b.stations)))].sort((a, b) => a.localeCompare(b));
