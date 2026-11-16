@@ -42,7 +42,7 @@ export async function getNews(limit = 12): Promise<NewsResult> {
   return { items: merged.slice(0, limit), live };
 }
 
-export interface RailLeg { line: string; board: string; alight: string; towards: string; stops: string[]; platform?: string }
+export interface RailLeg { line: string; board: string; alight: string; towards: string; stops: string[]; platform?: string; kind?: 'local' | 'metro' | 'walk' }
 export interface RailRoute { from: string; to: string; legs: RailLeg[]; totalStops: number }
 export type AskResult = { ok: true; answer: string; route?: RailRoute | null } | { ok: false; reason: 'not_connected' | 'rate_limited' | 'error' };
 

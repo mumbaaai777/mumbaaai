@@ -143,7 +143,7 @@ async function handleAsk(req: Request, env: Env): Promise<Response> {
   const pair = findStations(cleaned[cleaned.length - 1].text);
   const route = pair ? findRoute(pair.from, pair.to) : null;
   const railNote = route
-    ? `VERIFIED LOCAL TRAIN ROUTE (computed from the official station order; follow it exactly, never contradict it, never add other interchanges):\n${routeFacts(route)}\nIn your answer give each leg: line, where to board, which train (towards ...), where to change, and the platform only where given above (otherwise say to check the indicator boards). Do not list the in-between stations; the app shows them when the user taps "Show stations in between". You may add one road or Metro alternative only if you are sure of it.`
+    ? `VERIFIED TRAIN / METRO ROUTE (computed from the official station order of local and Metro lines; follow it exactly, never contradict it, never add other interchanges):\n${routeFacts(route)}\nIn your answer give each leg: line, where to board, which train (towards ...), where to change, and the platform only where given above (otherwise say to check the indicator boards). Do not list the in-between stations; the app shows them when the user taps "Show stations in between". Same-named local and Metro stations (e.g. Andheri, Ghatkopar, Dadar, CSMT, Mankhurd) are separate stations a short walk apart: say to walk across. Metro trains have no platform numbers to give; say to follow the signs for the direction shown. You may add one road alternative only if you are sure of it.`
     : '';
   const payload = {
     systemInstruction: { parts: [{ text: buildSystemPrompt(lang, zone) + (railNote ? '\n\n' + railNote : '') }] },

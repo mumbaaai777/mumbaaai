@@ -89,7 +89,7 @@ function parseFeed(xml: string, feed: FeedDef): Headline[] {
   return out;
 }
 
-// Mumbai suburban rail route finder (Western, Central, Harbour, Trans-Harbour).
+// Mumbai suburban rail + Metro route finder (Western, Central, Harbour, Trans-Harbour, Metro 1/2A/2B/3/7+9).
 // Station order is fixed data; the route is computed, never guessed by the AI.
 
 interface LineDef { id: string; name: string; stations: string[] }
@@ -108,7 +108,19 @@ const LINES: LineDef[] = [
   { id: 'HRP', name: 'Harbour line', stations: [...[...HR_WEST].reverse(), 'Wadala Road', ...HR_EAST] },
   { id: 'TH', name: 'Trans-Harbour line', stations: ['Thane', 'Airoli', 'Rabale', 'Ghansoli', 'Kopar Khairane', 'Turbhe', 'Sanpada', 'Vashi'] },
   { id: 'THP', name: 'Trans-Harbour line', stations: ['Thane', 'Airoli', 'Rabale', 'Ghansoli', 'Kopar Khairane', 'Turbhe', 'Juinagar', 'Nerul', 'Seawoods-Darave', 'Belapur CBD', 'Kharghar', 'Manasarovar', 'Khandeshwar', 'Panvel'] },
+  // Metro (operational lines; station order from MMRDA / MMRCL / MMOPL)
+  { id: 'M1', name: 'Metro Line 1 (Blue)', stations: ['Versova', 'D N Nagar', 'Azad Nagar', 'Andheri', 'Western Express Highway', 'Chakala (J B Nagar)', 'Airport Road', 'Marol Naka', 'Saki Naka', 'Asalpha', 'Jagruti Nagar', 'Ghatkopar'] },
+  { id: 'M2A', name: 'Metro Line 2A (Yellow)', stations: ['Dahisar East', 'Anand Nagar', 'Kandarpada', 'Mandapeshwar', 'Eksar', 'Borivali West', 'Pahadi Eksar', 'Kandivali West', 'Dahanukarwadi', 'Valnai-Meeth Chowky', 'Malad West', 'Lower Malad', 'Bangur Nagar', 'Goregaon West', 'Oshiwara', 'Lower Oshiwara', 'Andheri West'] },
+  { id: 'M3', name: 'Metro Line 3 (Aqua)', stations: ['Aarey JVLR', 'SEEPZ', 'MIDC Andheri', 'Marol Naka', 'CSMIA T2', 'Sahar Road', 'CSMIA T1', 'Santacruz Metro', 'Bandra Colony', 'BKC', 'Dharavi', 'Shitaladevi Mandir', 'Dadar', 'Siddhivinayak', 'Worli', 'Acharya Atre Chowk', 'Science Museum', 'Mahalaxmi', 'Mumbai Central', 'Grant Road', 'Girgaon', 'Kalbadevi', 'CSMT', 'Hutatma Chowk', 'Churchgate', 'Vidhan Bhavan', 'Cuffe Parade'] },
+  { id: 'M7', name: 'Metro Line 7 + 9 (Red)', stations: ['Gundavali', 'Mogra', 'Jogeshwari East', 'Goregaon East', 'Aarey', 'Dindoshi', 'Kurar', 'Akurli', 'Poisar', 'Magathane', 'Devipada', 'Rashtriya Udyan', 'Ovaripada', 'Dahisar East', 'Pandurang Wadi', 'Miragaon', 'Kashigaon'] },
+  { id: 'M2B', name: 'Metro Line 2B (Yellow)', stations: ['Diamond Garden', 'Shivaji Chowk', 'BSNL Metro', 'Mankhurd', 'Mandale'] },
+  // Short walks between differently named stations
+  { id: 'W1', name: 'Walk', stations: ['D N Nagar', 'Andheri West'] },
+  { id: 'W2', name: 'Walk', stations: ['Western Express Highway', 'Gundavali'] },
+  { id: 'W3', name: 'Walk', stations: ['Chembur', 'Diamond Garden'] },
 ];
+
+const WALK_MIN: Record<string, number> = { W1: 6, W2: 5, W3: 12 };
 
 // Usual platforms where well established; anything else: check the station indicator boards.
 const PLATFORMS: Record<string, string> = {
@@ -124,12 +136,12 @@ const ALIASES: Record<string, string> = {
   'vileparle': 'Vile Parle', 'parle': 'Vile Parle', 'vasai': 'Vasai Road', 'nala sopara': 'Nallasopara', 'bhayander': 'Bhayandar',
   'kanjur marg': 'Kanjurmarg', 'kings circle': "King's Circle", 'wadala': 'Wadala Road', 'belapur': 'Belapur CBD', 'cbd belapur': 'Belapur CBD',
   'seawoods': 'Seawoods-Darave', 'kopar khairne': 'Kopar Khairane', 'koparkhairane': 'Kopar Khairane', 'sandhurst rd': 'Sandhurst Road',
-  'dockyard rd': 'Dockyard Road', 'reay rd': 'Reay Road', 'guru tegh bahadur nagar': 'GTB Nagar', 'mansarovar': 'Manasarovar',
+  'dockyard rd': 'Dockyard Road', 'dn nagar': 'D N Nagar', 'weh': 'Western Express Highway', 'chakala': 'Chakala (J B Nagar)', 'jb nagar': 'Chakala (J B Nagar)', 'aarey colony': 'Aarey JVLR', 'bandra kurla complex': 'BKC', 'mumbai airport t2': 'CSMIA T2', 'airport t2': 'CSMIA T2', 'terminal 2': 'CSMIA T2', 'airport t1': 'CSMIA T1', 'terminal 1': 'CSMIA T1', 'pandurangwadi': 'Pandurang Wadi', 'mira gaon': 'Miragaon', 'kashi gaon': 'Kashigaon', 'diamond garden chembur': 'Diamond Garden', 'mandale metro': 'Mandale', 'reay rd': 'Reay Road', 'guru tegh bahadur nagar': 'GTB Nagar', 'mansarovar': 'Manasarovar',
   // Devanagari (Hindi/Marathi)
   'दादर': 'Dadar', 'कुर्ला': 'Kurla', 'वाशी': 'Vashi', 'ठाणे': 'Thane', 'पनवेल': 'Panvel', 'अंधेरी': 'Andheri', 'बोरीवली': 'Borivali', 'बोरिवली': 'Borivali',
   'चिंचपोकळी': 'Chinchpokli', 'चिंचपोकली': 'Chinchpokli', 'चर्चगेट': 'Churchgate', 'कल्याण': 'Kalyan', 'डोंबिवली': 'Dombivli', 'घाटकोपर': 'Ghatkopar',
   'बांद्रा': 'Bandra', 'वांद्रे': 'Bandra', 'विरार': 'Virar', 'नेरुळ': 'Nerul', 'नेरूल': 'Nerul', 'सायन': 'Sion', 'शीव': 'Sion', 'चेंबूर': 'Chembur',
-  'मुलुंड': 'Mulund', 'भायखळा': 'Byculla', 'भायखला': 'Byculla', 'गोरेगांव': 'Goregaon', 'गोरेगाव': 'Goregaon', 'मालाड': 'Malad', 'वडाळा': 'Wadala Road',
+  'मुलुंड': 'Mulund', 'वर्सोवा': 'Versova', 'काशीगाव': 'Kashigaon', 'काशीगांव': 'Kashigaon', 'वरळी': 'Worli', 'वर्ली': 'Worli', 'कफ परेड': 'Cuffe Parade', 'मंडाले': 'Mandale', 'मानखुर्द': 'Mankhurd', 'भायखळा': 'Byculla', 'भायखला': 'Byculla', 'गोरेगांव': 'Goregaon', 'गोरेगाव': 'Goregaon', 'मालाड': 'Malad', 'वडाळा': 'Wadala Road',
 };
 
 const ALL = Array.from(new Set(LINES.flatMap((l) => l.stations)));
@@ -160,7 +172,7 @@ function findStations(text: string): { from: string; to: string } | null {
   return { from: a.name, to: b.name };
 }
 
-interface RailLeg { line: string; board: string; alight: string; towards: string; stops: string[]; platform?: string }
+interface RailLeg { line: string; board: string; alight: string; towards: string; stops: string[]; platform?: string; kind?: 'local' | 'metro' | 'walk' }
 interface RailRoute { from: string; to: string; legs: RailLeg[]; totalStops: number }
 
 /** Fewest stops, with each change of train costing 4 stops. */
@@ -212,9 +224,10 @@ function findRoute(from: string, to: string): RailRoute | null {
     const down = cur[0].dir > 0;
     const alight = cur[cur.length - 1].st;
     let towards = down ? l.stations[l.stations.length - 1] : l.stations[0];
+    if (l.name === 'Walk') towards = `about ${WALK_MIN[l.id]} min walk`;
     if (l.name === 'Central line' && down) towards = CR_CORE.includes(alight) ? 'Kalyan / Thane (any slow local)' : l.id === 'CRK' ? 'Karjat, Badlapur or Ambernath' : 'Kasara or Titwala';
     if (l.id === 'HRP') towards = down ? 'Panvel' : 'Andheri / Goregaon';
-    legs.push({ line: l.name, board: cur[0].st, alight, towards, stops: cur.slice(1, -1).map((s) => s.st), platform: PLATFORMS[`${l.name}|${cur[0].st}`] });
+    legs.push({ line: l.name, board: cur[0].st, alight, towards, stops: cur.slice(1, -1).map((s) => s.st), platform: PLATFORMS[`${l.name}|${cur[0].st}`], kind: l.name === 'Walk' ? 'walk' : l.id.startsWith('M') ? 'metro' : 'local' });
   };
   for (const s of path) {
     if (cur.length && (s.line !== cur[0].line || s.dir !== cur[0].dir)) { flush(); cur = []; }
@@ -228,7 +241,7 @@ function findRoute(from: string, to: string): RailRoute | null {
 /** Plain-text route facts for the AI prompt. */
 function routeFacts(r: RailRoute): string {
   return r.legs
-    .map((l, i) => `Leg ${i + 1}: ${l.line} from ${l.board} to ${l.alight}, train towards ${l.towards}, ${l.stops.length + 1} stop${l.stops.length ? 's' : ''}${l.platform ? `, usually platform ${l.platform} at ${l.board}` : ''}. Stations in between: ${l.stops.join(', ') || 'none'}.`)
+    .map((l, i) => l.kind === 'walk' ? `Leg ${i + 1}: Walk from ${l.board} to ${l.alight} (${l.towards}).` : `Leg ${i + 1}: ${l.line} from ${l.board} to ${l.alight}, train towards ${l.towards}, ${l.stops.length + 1} stop${l.stops.length ? 's' : ''}${l.platform ? `, usually platform ${l.platform} at ${l.board}` : ''}. Stations in between: ${l.stops.join(', ') || 'none'}.`)
     .join('\n') + (r.legs.length > 1 ? `\nChange train at: ${r.legs.slice(0, -1).map((l) => l.alight).join(', ')}.` : '');
 }
 
@@ -419,7 +432,7 @@ async function handleAsk(req: Request, env: Env): Promise<Response> {
   const pair = findStations(cleaned[cleaned.length - 1].text);
   const route = pair ? findRoute(pair.from, pair.to) : null;
   const railNote = route
-    ? `VERIFIED LOCAL TRAIN ROUTE (computed from the official station order; follow it exactly, never contradict it, never add other interchanges):\n${routeFacts(route)}\nIn your answer give each leg: line, where to board, which train (towards ...), where to change, and the platform only where given above (otherwise say to check the indicator boards). Do not list the in-between stations; the app shows them when the user taps "Show stations in between". You may add one road or Metro alternative only if you are sure of it.`
+    ? `VERIFIED TRAIN / METRO ROUTE (computed from the official station order of local and Metro lines; follow it exactly, never contradict it, never add other interchanges):\n${routeFacts(route)}\nIn your answer give each leg: line, where to board, which train (towards ...), where to change, and the platform only where given above (otherwise say to check the indicator boards). Do not list the in-between stations; the app shows them when the user taps "Show stations in between". Same-named local and Metro stations (e.g. Andheri, Ghatkopar, Dadar, CSMT, Mankhurd) are separate stations a short walk apart: say to walk across. Metro trains have no platform numbers to give; say to follow the signs for the direction shown. You may add one road alternative only if you are sure of it.`
     : '';
   const payload = {
     systemInstruction: { parts: [{ text: buildSystemPrompt(lang, zone) + (railNote ? '\n\n' + railNote : '') }] },
