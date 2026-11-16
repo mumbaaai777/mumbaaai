@@ -9,6 +9,7 @@ import { useTable } from '../lib/content';
 import { Page } from '../components/motion';
 import { Chip, SampleBadge, Skeleton, inputCls } from '../components/ui';
 import { AdSlot } from '../components/AdSlot';
+import { ROLE_NAMES } from '../data/jobRoles';
 
 // Standard roles always offered in the Job role filter (listing titles are added on top).
 const JOB_ROLES = [
@@ -38,7 +39,8 @@ export function waLink(job: Job, text: string) {
 }
 
 export default function Jobs() {
-  const { t, f, locale } = useI18n();
+  const { t, f, locale, lang } = useI18n();
+  const roleLabel = (r: string) => (lang === 'hi' || lang === 'mr' ? ROLE_NAMES[r]?.[lang] ?? r : r);
   const { zone: myZone } = useZone();
   const { rows, loading } = useTable<Job>('jobs', { eq: { status: 'active' }, order: { column: 'posted_at', ascending: false } });
   const [zone, setZone] = useState<ZoneId | 'all'>(myZone);
@@ -46,8 +48,8 @@ export default function Jobs() {
   const [role, setRole] = useState('all');
   const roles = useMemo(() => {
     const extra = (rows ?? []).map((j) => j.title.trim()).filter((t) => !JOB_ROLES.some((r) => roleMatch(t, r)));
-    return [...JOB_ROLES, ...Array.from(new Set(extra))].sort((a, b) => a.localeCompare(b));
-  }, [rows]);
+    return [...JOB_ROLES, ...Array.from(new Set(extra))].sort((a, b) => roleLabel(a).localeCompare(roleLabel(b), locale));
+  }, [rows, lang]);
   const [minSalary, setMinSalary] = useState(0);
   const money = useMemo(() => new Intl.NumberFormat(locale, { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }), [locale]);
   const date = useMemo(() => new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' }), [locale]);
@@ -85,7 +87,7 @@ export default function Jobs() {
             <option value="all">{t.common.any}</option>
             {roles.map((r) => (
               <option key={r} value={r}>
-                {r}
+                {roleLabel(r)}
               </option>
             ))}
           </select>
