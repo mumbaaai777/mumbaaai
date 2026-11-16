@@ -1,5 +1,6 @@
 // One <audio> element for the whole app, so the Home mini-player and the Radio tab
 // control the same stream and playback survives tab changes.
+import { usePresence } from './presence';
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { env, asset } from './env';
 
@@ -28,6 +29,7 @@ export function RadioProvider({ children, showTitle }: { children: ReactNode; sh
   const [status, setStatus] = useState<Status>('idle');
   const [volume, setVol] = useState(() => Number(localStorage.getItem('mumbaaai.volume') ?? 0.9));
   const [hasAnalyser, setHasAnalyser] = useState(false);
+  usePresence(status === 'playing');
 
   const build = useCallback(() => {
     const a = new Audio();

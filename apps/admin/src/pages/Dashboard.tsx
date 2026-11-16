@@ -1,7 +1,48 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, Megaphone, Briefcase, MessageSquareWarning, Handshake } from 'lucide-react';
+import { db } from '../lib/data';
+import { Heart, Users, Megaphone, Briefcase, MessageSquareWarning, Handshake } from 'lucide-react';
 import { estimateRevenue, inr, type Ad, type BusinessListing, type Dedication, type Job, type ListenerReport, type RateCardRow } from '@mumbaaai/shared';
 import { useRows } from '../lib/useRows';
+
+function useLiveCount() {
+  const [live, setLive] = useState<{ users: number; listening: number } | null>(null);
+  useEffect(() => {
+    const client = db.client;
+    if (!client) return;
+    const ch = client.channel('live-users');
+    ch.on('presence', { event: 'sync' }, () => {
+      const state = ch.presenceState<{ listening?: boolean }>();
+      const keys = Object.keys(state);
+      setLive({ users: keys.length, listening: keys.filter((k) => state[k].some((m) => m.listening)).length });
+    }).subscribe();
+    return () => {
+      void client.removeChannel(ch);
+    };
+  }, []);
+  return live;
+}
+
+function LiveCard() {
+  const live = useLiveCount();
+  return (
+    <div className="card mb-4 flex items-center gap-4 p-4">
+      <span className="relative flex h-3 w-3">
+        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-60" />
+        <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500" />
+      </span>
+      <div className="flex flex-1 flex-wrap items-baseline gap-x-6 gap-y-1">
+        <p className="text-sm text-ink-soft">
+          <span className="text-3xl font-semibold tabular-nums text-ink">{live ? live.users : '…'}</span> in the app now
+        </p>
+        <p className="text-sm text-ink-soft">
+          <span className="text-3xl font-semibold tabular-nums text-ink">{live ? live.listening : '…'}</span> listening to Mumbaa Radio
+        </p>
+      </div>
+      <Users size={18} className="text-marigold-ink" />
+    </div>
+  );
+}
 
 export default function Dashboard() {
   const { rows: ded } = useRows<Dedication>('dedications');
@@ -21,6 +62,7 @@ export default function Dashboard() {
   return (
     <div>
       <h1 className="mb-5 text-2xl font-semibold tracking-tight text-ink">Today at Mumbaa Radio</h1>
+      <LiveCard />
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {cards.map((c) => (
           <Link key={c.to} to={c.to} className="card p-4 transition-transform hover:-translate-y-0.5">
