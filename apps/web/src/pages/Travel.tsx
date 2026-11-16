@@ -11,6 +11,9 @@ import { planRoute, sampleDepartures } from '../lib/planner';
 import { Page, Stagger, Item, Press } from '../components/motion';
 import { Chip, SectionTitle, SampleBadge, inputCls } from '../components/ui';
 
+// Usual boarding platforms, only where well established. Everything else: check the indicator board.
+const PLATFORMS: Record<string, string> = { 'harbour|CSMT': '1 / 2', 'harbour|Kurla': '7 / 8', 'trans_harbour|Thane': '9 / 10' };
+
 const lineColor = (id: LineId | 'walk') => (id === 'walk' ? 'var(--muted)' : LINES.find((l) => l.id === id)!.color);
 
 function Planner() {
@@ -99,6 +102,11 @@ function Planner() {
                             </>
                           )}
                         </p>
+                        {s.line !== 'walk' && (
+                          <p className="mt-1 text-xs font-medium text-ink-soft">
+                            {PLATFORMS[`${s.line}|${s.from}`] ? `${t.travel.platform} ${PLATFORMS[`${s.line}|${s.from}`]}` : t.travel.checkBoard}
+                          </p>
+                        )}
                         {s.line !== 'walk' && openSeg === `${from}-${to}-${i}` && (
                           <motion.ol initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="mt-2 space-y-1 overflow-hidden border-l-2 pl-3 text-sm text-ink-soft" style={{ borderColor: lineColor(s.line) }}>
                             {[...(s.via ?? []), s.to].map((st, k, arr) => (

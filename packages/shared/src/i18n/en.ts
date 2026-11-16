@@ -166,6 +166,8 @@ export const en = {
     timetableSample: 'Timetable sample, live status coming',
     nextDepartures: 'Next departures',
     stops: 'stops',
+    platform: 'Platform',
+    checkBoard: 'Platform: check the indicator board',
     change: 'Change at',
     direct: 'Direct',
     noRoute: 'No route found between these stations.',

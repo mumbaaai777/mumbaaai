@@ -166,6 +166,8 @@ export const mr: Dict = {
     timetableSample: 'नमुना वेळापत्रक, लाइव्ह स्थिती लवकरच',
     nextDepartures: 'पुढच्या गाड्या',
     stops: 'थांबे',
+    platform: 'फलाट',
+    checkBoard: 'फलाट: इंडिकेटर बोर्ड पाहा',
     change: 'येथे बदला',
     direct: 'थेट',
     noRoute: 'या स्टेशनांदरम्यान मार्ग सापडला नाही.',

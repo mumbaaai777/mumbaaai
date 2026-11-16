@@ -166,6 +166,8 @@ export const hi: Dict = {
     timetableSample: 'नमूना समय-सारणी, लाइव स्थिति जल्द',
     nextDepartures: 'अगली ट्रेनें',
     stops: 'स्टॉप',
+    platform: 'प्लेटफॉर्म',
+    checkBoard: 'प्लेटफॉर्म: इंडिकेटर बोर्ड देखें',
     change: 'यहाँ बदलें',
     direct: 'सीधी',
     noRoute: 'इन स्टेशनों के बीच कोई रास्ता नहीं मिला।',
