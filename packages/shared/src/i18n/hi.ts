@@ -204,6 +204,7 @@ export const hi: Dict = {
   jobs: {
     title: 'आपके पास नौकरियाँ',
     filters: 'फ़िल्टर',
+    role: 'नौकरी का पद',
     zone: 'इलाक़ा',
     type: 'नौकरी का प्रकार',
     salary: 'न्यूनतम वेतन',

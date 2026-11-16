@@ -204,6 +204,7 @@ export const mr: Dict = {
   jobs: {
     title: 'जवळच्या नोकऱ्या',
     filters: 'फिल्टर',
+    role: 'नोकरीचे पद',
     zone: 'भाग',
     type: 'नोकरीचा प्रकार',
     salary: 'किमान पगार',

@@ -24,18 +24,22 @@ export default function Jobs() {
   const { rows, loading } = useTable<Job>('jobs', { eq: { status: 'active' }, order: { column: 'posted_at', ascending: false } });
   const [zone, setZone] = useState<ZoneId | 'all'>(myZone);
   const [type, setType] = useState<JobType | 'all'>('all');
+  const [role, setRole] = useState('all');
+  const roles = useMemo(() => Array.from(new Set((rows ?? []).map((j) => j.title.trim()))).sort((a, b) => a.localeCompare(b)), [rows]);
   const [minSalary, setMinSalary] = useState(0);
   const money = useMemo(() => new Intl.NumberFormat(locale, { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }), [locale]);
   const date = useMemo(() => new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' }), [locale]);
 
   const list = (rows ?? []).filter(
     (j) =>
+      (role === 'all' || j.title.trim() === role) &&
       (zone === 'all' || j.zone === zone) &&
       (type === 'all' || j.job_type === type) &&
       (minSalary === 0 || (j.salary_max_inr ?? j.salary_min_inr ?? 0) >= minSalary),
   );
   const sorted = [...list].sort((a, b) => Number(b.sponsored) - Number(a.sponsored));
   const reset = () => {
+    setRole('all');
     setZone('all');
     setType('all');
     setMinSalary(0);
@@ -48,7 +52,18 @@ export default function Jobs() {
         <span className="tnum pb-1 text-sm text-muted">{f(t.jobs.count, { n: sorted.length })}</span>
       </div>
 
-      <section className="card mb-5 grid gap-3 p-4 sm:grid-cols-3" aria-label={t.jobs.filters}>
+      <section className="card mb-5 grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-4" aria-label={t.jobs.filters}>
+        <label className="grid gap-1">
+          <span className="text-xs font-medium text-muted">{t.jobs.role}</span>
+          <select className={inputCls} value={role} onChange={(e) => setRole(e.target.value)}>
+            <option value="all">{t.common.any}</option>
+            {roles.map((r) => (
+              <option key={r} value={r}>
+                {r}
+              </option>
+            ))}
+          </select>
+        </label>
         <label className="grid gap-1">
           <span className="text-xs font-medium text-muted">{t.jobs.zone}</span>
           <select className={inputCls} value={zone} onChange={(e) => setZone(e.target.value as ZoneId | 'all')}>

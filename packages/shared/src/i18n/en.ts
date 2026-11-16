@@ -204,6 +204,7 @@ export const en = {
   jobs: {
     title: 'Jobs near you',
     filters: 'Filters',
+    role: 'Job role',
     zone: 'Area',
     type: 'Job type',
     salary: 'Minimum salary',
