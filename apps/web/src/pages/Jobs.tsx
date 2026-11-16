@@ -7,7 +7,7 @@ import { useI18n } from '../lib/i18n';
 import { useZone } from '../lib/zone';
 import { useTable } from '../lib/content';
 import { Page } from '../components/motion';
-import { Chip, SampleBadge, Skeleton, inputCls } from '../components/ui';
+import { SampleBadge, Skeleton, inputCls } from '../components/ui';
 import { AdSlot } from '../components/AdSlot';
 import { ROLE_NAMES } from '../data/jobRoles';
 
@@ -114,16 +114,16 @@ export default function Jobs() {
             ))}
           </select>
         </label>
-        <div className="grid gap-1">
+        <label className="grid gap-1">
           <span className="text-xs font-medium text-muted">{t.jobs.salary}</span>
-          <div className="flex gap-1.5 overflow-x-auto [scrollbar-width:none]">
+          <select className={inputCls} value={minSalary} onChange={(e) => setMinSalary(Number(e.target.value))}>
             {SALARY_STEPS.map((s) => (
-              <Chip key={s} active={minSalary === s} onClick={() => setMinSalary(s)}>
-                {s === 0 ? t.common.any : `${s / 1000}k+`}
-              </Chip>
+              <option key={s} value={s}>
+                {s === 0 ? t.common.any : `${money.format(s)}+`}
+              </option>
             ))}
-          </div>
-        </div>
+          </select>
+        </label>
       </section>
 
       <AdSlot placement="jobs_sponsored" className="mb-4" />
