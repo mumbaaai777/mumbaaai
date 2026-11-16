@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { HashRouter, NavLink, Navigate, Route, Routes } from 'react-router-dom';
-import { LayoutDashboard, Heart, Megaphone, Briefcase, TriangleAlert, Radio, Mic2, MessageSquareWarning, Handshake, Newspaper as NewspaperIcon, KeyRound, LogOut, ExternalLink, Moon, Sun } from 'lucide-react';
+import { LayoutDashboard, Heart, Megaphone, Briefcase, TriangleAlert, Radio, Mic2, MessageSquareWarning, Handshake, Newspaper as NewspaperIcon, KeyRound, TrainFront, LogOut, ExternalLink, Moon, Sun } from 'lucide-react';
 import { AuthProvider, useAuth, DEMO_EMAIL, DEMO_PASSWORD } from './lib/auth';
 import { asset, isDemo, webUrl } from './lib/data';
 import { Btn, inputCls } from './components/Resource';
@@ -8,7 +8,7 @@ import Dashboard from './pages/Dashboard';
 import Dedications from './pages/Dedications';
 import Newspaper from './pages/Newspaper';
 import Account from './pages/Account';
-import { BusinessPage, AdsPage, JobsPage, AlertsPage, SchedulePage, RjPage, ReportsPage } from './pages/Resources';
+import { BusinessPage, AdsPage, JobsPage, AlertsPage, SchedulePage, RjPage, ReportsPage, PlatformsPage } from './pages/Resources';
 
 const NAV = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -21,6 +21,7 @@ const NAV = [
   { to: '/ads', label: 'Ads', icon: Megaphone },
   { to: '/jobs', label: 'Jobs', icon: Briefcase },
   { to: '/alerts', label: 'City alerts', icon: TriangleAlert },
+  { to: '/platforms', label: 'Train platforms', icon: TrainFront },
   { to: '/reports', label: 'Listener reports', icon: MessageSquareWarning },
 ];
 
@@ -156,6 +157,7 @@ function Shell() {
             <Route path="/ads" element={<AdsPage />} />
             <Route path="/jobs" element={<JobsPage />} />
             <Route path="/alerts" element={<AlertsPage />} />
+            <Route path="/platforms" element={<PlatformsPage />} />
             <Route path="/reports" element={<ReportsPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

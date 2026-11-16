@@ -431,6 +431,7 @@ async function handleAsk(req: Request, env: Env): Promise<Response> {
 
   const pair = findStations(cleaned[cleaned.length - 1].text);
   const route = pair ? findRoute(pair.from, pair.to) : null;
+  if (route) await applyPlatforms(route, env);
   const railNote = route
     ? `VERIFIED TRAIN / METRO ROUTE (computed from the official station order of local and Metro lines; follow it exactly, never contradict it, never add other interchanges):\n${routeFacts(route)}\nIn your answer give each leg: line, where to board, which train (towards ...), where to change, and the platform only where given above (otherwise say to check the indicator boards). Do not list the in-between stations; the app shows them when the user taps "Show stations in between". Same-named local and Metro stations (e.g. Andheri, Ghatkopar, Dadar, CSMT, Mankhurd) are separate stations a short walk apart: say to walk across. Metro trains have no platform numbers to give; say to follow the signs for the direction shown. You may add one road alternative only if you are sure of it.`
     : '';
@@ -576,6 +577,31 @@ async function handleNews(req: Request, env: Env, ctx?: { waitUntil(p: Promise<u
     status: data.items.length ? 200 : 502,
     headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': `public, max-age=${NEWS_TTL_SECONDS}`, 'X-Cache': 'MISS', ...corsHeaders(req, env) },
   });
+}
+
+// Admin-entered platforms (table station_platforms) fill in legs the built-in data does not cover.
+const LINE_KEY: Record<string, string> = { 'Western line': 'western', 'Central line': 'central', 'Harbour line': 'harbour', 'Trans-Harbour line': 'trans_harbour' };
+async function applyPlatforms(route: RailRoute, env: Env): Promise<void> {
+  if (!env.SUPABASE_URL || !env.SUPABASE_ANON_KEY) return;
+  try {
+    const res = await fetch(`${env.SUPABASE_URL}/rest/v1/station_platforms?select=station,line,towards,platform`, {
+      headers: { apikey: env.SUPABASE_ANON_KEY, Authorization: `Bearer ${env.SUPABASE_ANON_KEY}` },
+      signal: AbortSignal.timeout(3000),
+    });
+    if (!res.ok) return;
+    const rows = (await res.json()) as { station: string; line: string; towards: string | null; platform: string }[];
+    for (const leg of route.legs) {
+      const line = LINE_KEY[leg.line];
+      if (!line) continue;
+      const here = rows.filter((r) => r.line === line && r.station.trim().toLowerCase() === leg.board.toLowerCase());
+      const dir = here.find((r) => r.towards && leg.towards.toLowerCase().includes(r.towards.trim().toLowerCase()));
+      const any = here.find((r) => !r.towards);
+      const hit = dir ?? any;
+      if (hit) leg.platform = hit.platform;
+    }
+  } catch {
+    // keep built-in platforms
+  }
 }
 
 // ---------- router ----------

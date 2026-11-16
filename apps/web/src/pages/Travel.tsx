@@ -23,6 +23,12 @@ function Planner() {
   const [openSeg, setOpenSeg] = useState<string | null>(null);
   const valid = ALL_STATIONS.includes(from) && ALL_STATIONS.includes(to);
   const plan = useMemo(() => (valid ? planRoute(from, to) : null), [from, to, valid]);
+  const { rows: pfRows } = useTable<{ station: string; line: string; towards?: string | null; platform: string }>('station_platforms');
+  const platformFor = (line: string, station: string, towards: string) => {
+    const here = (pfRows ?? []).filter((r) => r.line === line && r.station.trim().toLowerCase() === station.toLowerCase());
+    const hit = here.find((r) => r.towards && towards.toLowerCase().includes(r.towards.trim().toLowerCase())) ?? here.find((r) => !r.towards);
+    return hit?.platform ?? PLATFORMS[`${line}|${station}`];
+  };
   const firstRide = plan?.segments.find((s) => s.line !== 'walk');
   const deps = firstRide && firstRide.line !== 'walk' ? sampleDepartures(firstRide.line, firstRide.from) : [];
 
@@ -104,7 +110,7 @@ function Planner() {
                         </p>
                         {s.line !== 'walk' && (
                           <p className="mt-1 text-xs font-medium text-ink-soft">
-                            {PLATFORMS[`${s.line}|${s.from}`] ? `${t.travel.platform} ${PLATFORMS[`${s.line}|${s.from}`]}` : t.travel.checkBoard}
+                            {platformFor(s.line, s.from, s.towards) ? `${t.travel.platform} ${platformFor(s.line, s.from, s.towards)}` : t.travel.checkBoard}
                           </p>
                         )}
                         {s.line !== 'walk' && openSeg === `${from}-${to}-${i}` && (

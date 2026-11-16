@@ -20,7 +20,8 @@ export type TableName =
   | 'admin_invites'
   | 'news_overrides'
   | 'app_users_stats'
-  | 'rate_card';
+  | 'rate_card'
+  | 'station_platforms';
 
 type Row = Record<string, unknown> & { id?: string };
 

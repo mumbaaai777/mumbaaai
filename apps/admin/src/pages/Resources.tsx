@@ -226,3 +226,36 @@ export function BusinessPage() {
 }
 
 export { db };
+
+export interface StationPlatform { id: string; station: string; line: string; towards?: string | null; platform: string; note?: string | null }
+const LINE_OPTS = [
+  { value: 'western', label: 'Western' },
+  { value: 'central', label: 'Central' },
+  { value: 'harbour', label: 'Harbour' },
+  { value: 'trans_harbour', label: 'Trans-Harbour' },
+];
+
+export function PlatformsPage() {
+  return (
+    <ResourcePage<StationPlatform & Record<string, unknown>>
+      table="station_platforms"
+      title="Train platforms"
+      description="Usual boarding platforms for local trains. Ask Aai and the Local & Metro planner show these. Only add what you are sure of; everything else says to check the indicator board."
+      searchKeys={['station', 'line']}
+      fields={[
+        { key: 'station', label: 'Station (spelled as in the app, e.g. Dadar)', type: 'text', required: true, half: true },
+        { key: 'line', label: 'Line', type: 'select', options: LINE_OPTS, required: true, half: true },
+        { key: 'towards', label: 'Direction (optional, e.g. Churchgate, Kalyan, Panvel)', type: 'text', half: true },
+        { key: 'platform', label: 'Platform', type: 'text', required: true, half: true, placeholder: '1 or 2' },
+        { key: 'note', label: 'Note (optional)', type: 'text' },
+      ]}
+      defaults={() => ({ line: 'western' })}
+      columns={[
+        { key: 'station', label: 'Station', render: (r) => <span className="font-medium">{r.station}</span> },
+        { key: 'line', label: 'Line', render: (r) => LINE_OPTS.find((o) => o.value === r.line)?.label ?? r.line },
+        { key: 'towards', label: 'Direction', render: (r) => r.towards || 'Any' },
+        { key: 'platform', label: 'Platform' },
+      ]}
+    />
+  );
+}
