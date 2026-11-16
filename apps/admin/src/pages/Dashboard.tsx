@@ -23,6 +23,40 @@ function useLiveCount() {
   return live;
 }
 
+function useVisits() {
+  const [rows, setRows] = useState<{ day: string; visitors: number; listeners: number }[] | null>(null);
+  useEffect(() => {
+    const client = db.client;
+    if (!client) return;
+    void client.rpc('visit_stats', { days: 7 }).then(({ data, error }) => setRows(error ? [] : ((data as typeof rows) ?? [])));
+  }, []);
+  return rows;
+}
+
+function VisitsCard() {
+  const rows = useVisits();
+  const today = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
+  const t = rows?.find((r) => r.day === today);
+  const week = rows?.reduce((s, r) => s + Number(r.visitors), 0) ?? 0;
+  return (
+    <div className="card mb-4 p-4">
+      <p className="text-xs font-semibold uppercase tracking-wide text-muted">Real visitors (counted since 17 Nov 2026)</p>
+      <div className="mt-2 flex flex-wrap items-baseline gap-x-6 gap-y-1 text-sm text-ink-soft">
+        <p><span className="text-3xl font-semibold tabular-nums text-ink">{rows ? Number(t?.visitors ?? 0) : '…'}</span> today</p>
+        <p><span className="text-3xl font-semibold tabular-nums text-ink">{rows ? Number(t?.listeners ?? 0) : '…'}</span> played the radio today</p>
+        <p><span className="text-3xl font-semibold tabular-nums text-ink">{rows ? week : '…'}</span> visits in last 7 days</p>
+      </div>
+      {rows && rows.length > 0 && (
+        <div className="mt-3 flex flex-wrap gap-2 text-xs text-muted">
+          {rows.map((r) => (
+            <span key={r.day} className="rounded-full bg-black/5 px-2 py-0.5 tabular-nums">{r.day.slice(5)}: {Number(r.visitors)}</span>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function LiveCard() {
   const live = useLiveCount();
   return (
@@ -63,6 +97,7 @@ export default function Dashboard() {
     <div>
       <h1 className="mb-5 text-2xl font-semibold tracking-tight text-ink">Today at Mumbaa Radio</h1>
       <LiveCard />
+      <VisitsCard />
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {cards.map((c) => (
           <Link key={c.to} to={c.to} className="card p-4 transition-transform hover:-translate-y-0.5">
