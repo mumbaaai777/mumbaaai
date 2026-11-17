@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>MumbaAai — Your city. Your Aai.</title>
+    <meta name="description" content="MumbaAai: live weather and air quality, local trains and metro, jobs, Mumbaa Radio and Ask Aai — for Mumbai, Thane, Navi Mumbai and the whole MMR." />
+    <meta name="theme-color" content="#FAF7F2" />
+    <link rel="icon" href="/mumbaaai/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" href="/mumbaaai/icons/favicon-32.png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/mumbaaai/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="/mumbaaai/manifest.webmanifest" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="MumbaAai" />
+    <meta property="og:title" content="MumbaAai" />
+    <meta property="og:description" content="Your city. Your Aai." />
+    <script>
+      // Set theme before paint to avoid a flash
+      (function () {
+        try {
+          var m = localStorage.getItem('mumbaaai.theme') || 'system';
+          var d = m === 'dark' || (m === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
+          if (d) document.documentElement.classList.add('dark');
+          var l = localStorage.getItem('mumbaaai.lang');
+          if (l) document.documentElement.lang = l;
+        } catch (e) {}
+      })();
+    </script>
+    <script type="module" crossorigin src="/mumbaaai/assets/index-BbwUrQks.js"></script>
+    <link rel="modulepreload" crossorigin href="/mumbaaai/assets/rolldown-runtime-BWaJ3C7D.js">
+    <link rel="modulepreload" crossorigin href="/mumbaaai/assets/motion-D5835rpc.js">
+    <link rel="stylesheet" crossorigin href="/mumbaaai/assets/index-BDLPHCGG.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>MumbaAai needs JavaScript to run.</noscript>
+  </body>
+</html>
