@@ -82,7 +82,7 @@ export interface Job {
   description?: string | null;
   whatsapp_number: string; // E.164 without + e.g. 919800000000
   sponsored: boolean;
-  status: 'active' | 'closed' | 'draft';
+  status: 'active' | 'pending' | 'closed' | 'draft';
   posted_at: string;
   sample?: boolean;
   walk_in?: boolean | null;

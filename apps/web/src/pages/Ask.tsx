@@ -73,11 +73,51 @@ function Typewriter({ text, onTick }: { text: string; onTick: () => void }) {
   );
 }
 
-const RL: Record<string, { show: string; hide: string; board: string; change: string; arrive: string; towards: string; pf: string; pfCheck: string; stops: string; walk: string; metroSigns: string }> = {
-  en: { show: 'Show stations in between', hide: 'Hide stations', board: 'Board at', change: 'Change at', arrive: 'Get off at', towards: 'towards', pf: 'Platform', pfCheck: 'Platform: check indicator board', stops: 'stops', walk: 'Walk', metroSigns: 'Follow the Metro signs for this direction' },
-  hi: { show: 'बीच के स्टेशन दिखाएं', hide: 'स्टेशन छुपाएं', board: 'यहां से चढ़ें', change: 'यहां ट्रेन बदलें', arrive: 'यहां उतरें', towards: 'की ओर', pf: 'प्लेटफॉर्म', pfCheck: 'प्लेटफॉर्म: इंडिकेटर बोर्ड देखें', stops: 'स्टॉप', walk: 'पैदल चलें', metroSigns: 'इस दिशा के लिए मेट्रो के संकेत देखें' },
-  mr: { show: 'मधली स्टेशन्स दाखवा', hide: 'स्टेशन्स लपवा', board: 'इथून चढा', change: 'इथे गाडी बदला', arrive: 'इथे उतरा', towards: 'च्या दिशेने', pf: 'फलाट', pfCheck: 'फलाट: इंडिकेटर बोर्ड पाहा', stops: 'थांबे', walk: 'चालत जा', metroSigns: 'या दिशेसाठी मेट्रोच्या खुणा पाहा' },
+const RL: Record<string, { show: string; hide: string; board: string; change: string; arrive: string; towardsFn: (s: string) => string; pf: string; pfCheck: string; stop: string; stops: string; walk: string; metroSigns: string }> = {
+  en: { show: 'Show stations in between', hide: 'Hide stations', board: 'Board at', change: 'Change at', arrive: 'Get off at', towardsFn: (s) => `towards ${s}`, pf: 'Platform', pfCheck: 'Platform: check indicator board', stop: 'stop', stops: 'stops', walk: 'Walk', metroSigns: 'Follow the Metro signs for this direction' },
+  hi: { show: 'बीच के स्टेशन दिखाएं', hide: 'स्टेशन छुपाएं', board: 'यहां से चढ़ें', change: 'यहां ट्रेन बदलें', arrive: 'यहां उतरें', towardsFn: (s) => `${s} की ओर`, pf: 'प्लेटफॉर्म', pfCheck: 'प्लेटफॉर्म: इंडिकेटर बोर्ड देखें', stop: 'स्टॉप', stops: 'स्टॉप', walk: 'पैदल चलें', metroSigns: 'इस दिशा के लिए मेट्रो के संकेत देखें' },
+  mr: { show: 'मधली स्टेशन्स दाखवा', hide: 'स्टेशन्स लपवा', board: 'इथून चढा', change: 'इथे गाडी बदला', arrive: 'इथे उतरा', towardsFn: (s) => `${s} च्या दिशेने`, pf: 'फलाट', pfCheck: 'फलाट: इंडिकेटर बोर्ड पाहा', stop: 'थांबे', stops: 'थांबे', walk: 'चालत जा', metroSigns: 'या दिशेसाठी मेट्रोच्या खुणा पाहा' },
 };
+
+/** Hindi / Marathi labels for the line names the rail API returns (unknown names are left as they are). */
+const LINE_NAMES: Record<string, { hi: string; mr: string }> = {
+  'Western line': { hi: 'पश्चिम रेलवे', mr: 'पश्चिम रेल्वे' },
+  'Central line': { hi: 'मध्य रेलवे', mr: 'मध्य रेल्वे' },
+  'Harbour line': { hi: 'हार्बर लाइन', mr: 'हार्बर लाईन' },
+  'Trans-Harbour line': { hi: 'ट्रान्स-हार्बर', mr: 'ट्रान्स-हार्बर' },
+  'Trans-Harbour': { hi: 'ट्रान्स-हार्बर', mr: 'ट्रान्स-हार्बर' },
+};
+const METRO_COLORS: Record<string, { hi: string; mr: string }> = {
+  Blue: { hi: 'नीली', mr: 'निळी' },
+  Yellow: { hi: 'पीली', mr: 'पिवळी' },
+  Aqua: { hi: 'एक्वा', mr: 'अ‍ॅक्वा' },
+  Red: { hi: 'लाल', mr: 'लाल' },
+};
+function lineLabel(name: string, lang: string) {
+  if (lang !== 'hi' && lang !== 'mr') return name;
+  if (LINE_NAMES[name]) return LINE_NAMES[name][lang];
+  const m = name.match(/^Metro Line (.+?)(?: \((\w+)\))?$/);
+  if (m) {
+    const num = m[1].replace(' + ', ' + ');
+    const col = m[2] ? ` (${METRO_COLORS[m[2]]?.[lang] ?? m[2]})` : '';
+    return `${lang === 'mr' ? 'मेट्रो मार्ग' : 'मेट्रो लाइन'} ${num}${col}`;
+  }
+  return name;
+}
+/** Translate the fixed bits of the API's "towards" text (station names stay as they are). */
+function towardsText(s: string, lang: string) {
+  if (lang !== 'hi' && lang !== 'mr') return s;
+  return s
+    .replace(/\s*\(any slow local\)/, lang === 'mr' ? ' (कोणतीही धिमी लोकल)' : ' (कोई भी धीमी लोकल)')
+    .replace(/ or /g, lang === 'mr' ? ' किंवा ' : ' या ');
+}
+function walkText(s: string, lang: string) {
+  const m = s.match(/^about (\d+) min walk$/);
+  if (!m) return s.replace(/^about /, '~');
+  if (lang === 'hi') return `लगभग ${m[1]} मिनट पैदल`;
+  if (lang === 'mr') return `सुमारे ${m[1]} मिनिटे चालत`;
+  return `~${m[1]} min walk`;
+}
 
 /** Verified train route from the API, with an optional list of every station in between. */
 function RouteCard({ route, lang }: { route: RailRoute; lang: string }) {
@@ -90,11 +130,11 @@ function RouteCard({ route, lang }: { route: RailRoute; lang: string }) {
         {route.legs.map((leg, i) => (
           leg.kind === 'walk' ? (
             <li key={i} className="border-l-2 border-dashed border-line-strong pl-3 text-muted">
-              🚶 {L.walk}: <strong>{leg.board}</strong> → <strong>{leg.alight}</strong> · {leg.towards.replace(/^about /, '~')}
+              🚶 {L.walk}: <strong>{leg.board}</strong> → <strong>{leg.alight}</strong> · {walkText(leg.towards, lang)}
             </li>
           ) : (
           <li key={i} className={`border-l-2 pl-3 ${leg.kind === 'metro' ? 'border-sky-500' : 'border-marigold'}`}>
-            <div className="font-medium text-ink">{leg.kind === 'metro' ? '🚇 ' : ''}{leg.line} · {L.towards} {leg.towards}</div>
+            <div className="font-medium text-ink">{leg.kind === 'metro' ? '🚇 ' : ''}{lineLabel(leg.line, lang)} · {L.towardsFn(towardsText(leg.towards, lang))}</div>
             <div className="text-muted">
               {i === 0 ? L.board : L.change} <strong>{leg.board}</strong> · {leg.platform ? `${L.pf} ${leg.platform}` : leg.kind === 'metro' ? L.metroSigns : L.pfCheck}
             </div>
@@ -106,7 +146,7 @@ function RouteCard({ route, lang }: { route: RailRoute; lang: string }) {
               </ul>
             )}
             <div className="text-muted">
-              {i === route.legs.length - 1 ? L.arrive : L.change} <strong>{leg.alight}</strong> · {leg.stops.length + 1} {L.stops}
+              {i === route.legs.length - 1 ? L.arrive : L.change} <strong>{leg.alight}</strong> · {leg.stops.length + 1} {leg.stops.length + 1 === 1 ? L.stop : L.stops}
             </div>
           </li>
           )

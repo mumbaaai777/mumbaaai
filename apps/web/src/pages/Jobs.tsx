@@ -1,9 +1,11 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { MapPin, MessageCircle, BadgeCheck, CalendarDays, Clock, Navigation } from 'lucide-react';
+import { MapPin, MessageCircle, BadgeCheck, CalendarDays, Clock, Navigation, Briefcase, Send, CheckCircle2 } from 'lucide-react';
 import { JOB_TYPES, ZONES, type Job, type JobType, type ZoneId } from '@mumbaaai/shared';
 import { useI18n } from '../lib/i18n';
+import { db } from '../lib/data';
+import { abuseBlock } from '../lib/modmsg';
 import { useZone } from '../lib/zone';
 import { useTable } from '../lib/content';
 import { Page } from '../components/motion';
@@ -38,6 +40,163 @@ export function waLink(job: Job, text: string) {
   return `https://wa.me/${num || ''}?text=${encodeURIComponent(text)}`;
 }
 
+function PostJobForm({ onDone, defaultZone }: { onDone: () => void; defaultZone: ZoneId | 'all' }) {
+  const { t, lang } = useI18n();
+  const jb = t.jobs;
+  const roleLabel = (r: string) => (lang === 'hi' || lang === 'mr' ? ROLE_NAMES[r]?.[lang] ?? r : r);
+  const [f, setF] = useState({
+    title: '', company: '', zone: (defaultZone === 'all' ? '' : defaultZone) as ZoneId | '', locality: '', job_type: 'full_time' as JobType,
+    salFrom: '', salTo: '', whatsapp: '', description: '', walkin_date: '', walkin_time: '', walkin_venue: '',
+  });
+  const [walkIn, setWalkIn] = useState(false);
+  const [state, setState] = useState<'idle' | 'sending' | 'sent'>('idle');
+  const [err, setErr] = useState<string | null>(null);
+  const set = (k: keyof typeof f) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => setF((x) => ({ ...x, [k]: e.target.value }));
+  const today = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    let phone = f.whatsapp.replace(/\D/g, '');
+    if (phone.length === 12 && phone.startsWith('91')) phone = phone.slice(2);
+    if (phone.length === 11 && phone.startsWith('0')) phone = phone.slice(1);
+    if (!f.title.trim() || !f.company.trim() || !f.zone || !f.job_type || !/^[6-9]\d{9}$/.test(phone)) return setErr(jb.required);
+    const from = f.salFrom ? Math.round(Number(f.salFrom.replace(/[^\d]/g, ''))) : null;
+    const to = f.salTo ? Math.round(Number(f.salTo.replace(/[^\d]/g, ''))) : null;
+    if (from && to && to < from) return setErr(jb.badSalary);
+    const bad = abuseBlock(lang, f.title, f.company, f.locality, f.description, f.walkin_venue);
+    if (bad) return setErr(bad);
+    setErr(null);
+    setState('sending');
+    try {
+      await db.insert<Job>('jobs', {
+        title: f.title.trim().slice(0, 80),
+        company: f.company.trim().slice(0, 80),
+        zone: f.zone as ZoneId,
+        locality: f.locality.trim().slice(0, 60) || null,
+        job_type: f.job_type,
+        salary_min_inr: from || null,
+        salary_max_inr: to || null,
+        description: f.description.trim().slice(0, 600) || null,
+        whatsapp_number: '91' + phone,
+        walk_in: walkIn,
+        walkin_date: walkIn ? f.walkin_date || null : null,
+        walkin_time: walkIn ? f.walkin_time.trim().slice(0, 40) || null : null,
+        walkin_venue: walkIn ? f.walkin_venue.trim().slice(0, 200) || null : null,
+        status: 'pending',
+        sponsored: false,
+      });
+      setState('sent');
+    } catch (x) {
+      setState('idle');
+      setErr((x as Error).message || t.common.error);
+    }
+  };
+
+  if (state === 'sent')
+    return (
+      <div className="flex flex-col items-center gap-3 p-6 text-center">
+        <motion.span initial={{ scale: 0.4 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 300, damping: 14 }}>
+          <CheckCircle2 size={44} className="text-marigold" />
+        </motion.span>
+        <p className="max-w-sm text-sm text-ink">{jb.sent}</p>
+        <button className="text-sm font-semibold text-marigold-ink underline" onClick={onDone}>
+          {t.common.close}
+        </button>
+      </div>
+    );
+
+  const lbl = 'grid gap-1 text-xs font-semibold text-ink-soft';
+  return (
+    <form onSubmit={submit} className="grid gap-3 p-5">
+      <datalist id="job-roles">
+        {JOB_ROLES.map((r) => (
+          <option key={r} value={r}>
+            {roleLabel(r) !== r ? roleLabel(r) : undefined}
+          </option>
+        ))}
+      </datalist>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <label className={lbl}>
+          {jb.fTitle} *<input className={inputCls} list="job-roles" value={f.title} onChange={set('title')} maxLength={80} placeholder={jb.fTitlePh} />
+        </label>
+        <label className={lbl}>
+          {jb.fCompany} *<input className={inputCls} value={f.company} onChange={set('company')} maxLength={80} autoComplete="organization" />
+        </label>
+        <label className={lbl}>
+          {jb.zone} *
+          <select className={inputCls} value={f.zone} onChange={set('zone')}>
+            <option value="">—</option>
+            {ZONES.map((z) => (
+              <option key={z.id} value={z.id}>
+                {t.zones[z.id]}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className={lbl}>
+          {jb.fLocality}
+          <input className={inputCls} value={f.locality} onChange={set('locality')} maxLength={60} placeholder={jb.fLocalityPh} />
+        </label>
+        <label className={lbl}>
+          {jb.type} *
+          <select className={inputCls} value={f.job_type} onChange={set('job_type')}>
+            {JOB_TYPES.map((jt) => (
+              <option key={jt} value={jt}>
+                {jb.types[jt]}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className={lbl}>
+          {jb.fWhatsapp} *<input className={inputCls} value={f.whatsapp} onChange={set('whatsapp')} inputMode="tel" maxLength={16} placeholder="98xxxxxxxx" />
+        </label>
+        <label className={lbl}>
+          {jb.fSalaryFrom}
+          <input className={inputCls} value={f.salFrom} onChange={set('salFrom')} inputMode="numeric" maxLength={8} placeholder="15000" />
+        </label>
+        <label className={lbl}>
+          {jb.fSalaryTo}
+          <input className={inputCls} value={f.salTo} onChange={set('salTo')} inputMode="numeric" maxLength={8} placeholder="25000" />
+        </label>
+      </div>
+      <label className={lbl}>
+        {jb.fDesc}
+        <textarea className={`${inputCls} min-h-20`} value={f.description} onChange={set('description')} maxLength={600} placeholder={jb.fDescPh} />
+        <span className="text-right font-normal text-muted">{f.description.length}/600</span>
+      </label>
+      <label className="flex items-center gap-2 text-sm text-ink-soft">
+        <input type="checkbox" className="h-4 w-4 accent-[#F4A300]" checked={walkIn} onChange={(e) => setWalkIn(e.target.checked)} />
+        {jb.fWalkin}
+      </label>
+      {walkIn && (
+        <div className="grid gap-3 sm:grid-cols-3">
+          <label className={lbl}>
+            {jb.fWalkinDate}
+            <input type="date" className={inputCls} min={today} value={f.walkin_date} onChange={set('walkin_date')} />
+          </label>
+          <label className={lbl}>
+            {jb.fWalkinTime}
+            <input className={inputCls} value={f.walkin_time} onChange={set('walkin_time')} maxLength={40} placeholder={jb.fWalkinTimePh} />
+          </label>
+          <label className={lbl}>
+            {jb.fWalkinVenue}
+            <input className={inputCls} value={f.walkin_venue} onChange={set('walkin_venue')} maxLength={200} />
+          </label>
+        </div>
+      )}
+      {err && <p className="text-sm text-live-ink">{err}</p>}
+      <div className="flex items-center gap-3">
+        <motion.button whileTap={{ scale: 0.96 }} disabled={state === 'sending'} className="inline-flex items-center gap-2 rounded-full bg-marigold px-5 py-2.5 text-sm font-bold text-navy disabled:opacity-60">
+          <Send size={15} /> {state === 'sending' ? jb.sending : jb.send}
+        </motion.button>
+        <button type="button" className="text-sm text-muted" onClick={onDone}>
+          {t.common.cancel}
+        </button>
+      </div>
+    </form>
+  );
+}
+
 export default function Jobs() {
   const { t, f, locale, lang } = useI18n();
   const roleLabel = (r: string) => (lang === 'hi' || lang === 'mr' ? ROLE_NAMES[r]?.[lang] ?? r : r);
@@ -51,6 +210,11 @@ export default function Jobs() {
     return [...JOB_ROLES, ...Array.from(new Set(extra))].sort((a, b) => roleLabel(a).localeCompare(roleLabel(b), locale));
   }, [rows, lang]);
   const [minSalary, setMinSalary] = useState(0);
+  const [posting, setPosting] = useState(false);
+  const openPost = () => {
+    setPosting(true);
+    requestAnimationFrame(() => document.getElementById('post-job')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+  };
   const money = useMemo(() => new Intl.NumberFormat(locale, { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }), [locale]);
   const date = useMemo(() => new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' }), [locale]);
 
@@ -126,6 +290,24 @@ export default function Jobs() {
         </label>
       </section>
 
+      <section id="post-job" className="card mb-5 scroll-mt-20 overflow-hidden bg-navy text-offwhite dark:bg-surface">
+        <div className="flex flex-wrap items-center justify-between gap-3 p-4">
+          <p className="max-w-xl text-sm text-offwhite/80">{t.jobs.postHint}</p>
+          {!posting && (
+            <motion.button whileTap={{ scale: 0.96 }} onClick={() => setPosting(true)} className="inline-flex items-center gap-2 rounded-full bg-marigold px-4 py-2.5 text-sm font-bold text-navy">
+              <Briefcase size={16} /> {t.jobs.post}
+            </motion.button>
+          )}
+        </div>
+        <AnimatePresence initial={false}>
+          {posting && (
+            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden bg-bg text-ink">
+              <PostJobForm onDone={() => setPosting(false)} defaultZone={zone} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </section>
+
       <AdSlot placement="jobs_sponsored" className="mb-4" />
 
       {loading ? (
@@ -136,10 +318,19 @@ export default function Jobs() {
         </div>
       ) : sorted.length === 0 ? (
         <div className="card p-8 text-center">
-          <p className="text-muted">{t.jobs.none}</p>
-          <button onClick={reset} className="mt-3 font-semibold text-marigold-ink">
-            {t.jobs.reset}
-          </button>
+          <p className="text-muted">{(rows ?? []).length === 0 || (role === 'all' && type === 'all' && minSalary === 0) ? t.jobs.noneYet : t.jobs.none}</p>
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
+            {!posting && (
+              <motion.button whileTap={{ scale: 0.96 }} onClick={openPost} className="inline-flex items-center gap-2 rounded-full bg-marigold px-4 py-2.5 text-sm font-bold text-navy">
+                <Briefcase size={16} /> {t.jobs.post}
+              </motion.button>
+            )}
+            {(role !== 'all' || zone !== 'all' || type !== 'all' || minSalary !== 0) && (rows ?? []).length > 0 && (
+              <button onClick={reset} className="font-semibold text-marigold-ink">
+                {t.jobs.reset}
+              </button>
+            )}
+          </div>
         </div>
       ) : (
         <motion.ul layout className="grid gap-3 md:grid-cols-2">

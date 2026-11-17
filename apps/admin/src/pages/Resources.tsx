@@ -55,8 +55,9 @@ export function JobsPage() {
     <ResourcePage<Job & Record<string, unknown>>
       table="jobs"
       title="Jobs"
-      description="Local jobs. Applicants contact the employer on WhatsApp."
-      searchKeys={['title', 'company']}
+      description="Local jobs. Applicants contact the employer on WhatsApp. Jobs posted from the app arrive as 'pending': review, then set Status to 'active' to publish."
+      searchKeys={['title', 'company', 'status']}
+      listOptions={{ order: { column: 'posted_at', ascending: false } }}
       fields={[
         { key: 'title', label: 'Job title', type: 'text', required: true },
         { key: 'company', label: 'Company', type: 'text', required: true, half: true },
@@ -66,7 +67,7 @@ export function JobsPage() {
         { key: 'salary_min_inr', label: 'Salary from (₹/month)', type: 'number', half: true },
         { key: 'salary_max_inr', label: 'Salary to (₹/month)', type: 'number', half: true },
         { key: 'whatsapp_number', label: 'WhatsApp (e.g. 919800000000)', type: 'text', required: true, half: true },
-        { key: 'status', label: 'Status', type: 'select', options: opt(['active', 'draft', 'closed']), required: true, half: true },
+        { key: 'status', label: 'Status', type: 'select', options: opt(['pending', 'active', 'draft', 'closed']), required: true, half: true },
         { key: 'sponsored', label: 'Sponsored', type: 'checkbox', help: 'Pin as sponsored' },
         { key: 'walk_in', label: 'Walk-in interview', type: 'checkbox', help: 'Show in the Walk-ins section' },
         { key: 'walkin_date', label: 'Walk-in date', type: 'date', half: true },
@@ -76,10 +77,24 @@ export function JobsPage() {
       ]}
       defaults={() => ({ job_type: 'full_time', zone: 'western_suburbs', status: 'active', sponsored: false, posted_at: new Date().toISOString() })}
       columns={[
-        { key: 'title', label: 'Title', render: (j) => <span className="font-medium">{j.title}</span> },
+        {
+          key: 'title',
+          label: 'Title',
+          render: (j) => {
+            const flags = checkText(`${j.title} ${j.company} ${j.description ?? ''} ${j.walkin_venue ?? ''}`, { allowContact: true, allowLinks: true });
+            return (
+              <span className="font-medium">
+                {j.title}
+                {flags.map((f) => (
+                  <Badge key={f} tone="bad">⚠ {MOD_FLAG_LABEL[f]}</Badge>
+                ))}
+              </span>
+            );
+          },
+        },
         { key: 'company', label: 'Company' },
         { key: 'zone', label: 'Zone', render: (j) => zoneName(j.zone) },
-        { key: 'status', label: 'Status', render: (j) => <Badge tone={j.status === 'active' ? 'good' : 'muted'}>{j.status}</Badge> },
+        { key: 'status', label: 'Status', render: (j) => <Badge tone={j.status === 'active' ? 'good' : j.status === 'pending' ? 'warn' : 'muted'}>{j.status === 'pending' ? '⏳ pending review' : j.status}</Badge> },
         { key: 'sponsored', label: '', render: (j) => (j.sponsored ? <Badge tone="warn">Sponsored</Badge> : null) },
       ]}
     />

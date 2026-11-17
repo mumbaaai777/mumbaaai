@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowDownUp, ArrowUpRight, ChevronDown, Footprints, Clock, Send, CheckCircle2 } from 'lucide-react';
+import { ArrowDownUp, ArrowUpRight, ChevronDown, Clock, Send, CheckCircle2 } from 'lucide-react';
 import { ZONES, type ListenerReport, type ReportKind, type ZoneId } from '@mumbaaai/shared';
 import { useI18n } from '../lib/i18n';
 import { useZone } from '../lib/zone';
@@ -87,7 +87,7 @@ function Planner() {
                         <p className="mt-0.5 flex flex-wrap items-center gap-x-2 text-sm text-muted">
                           {s.line === 'walk' ? (
                             <span className="inline-flex items-center gap-1">
-                              <Footprints size={13} /> {s.minutes} {t.common.minutesShort}
+                              🚶 {t.travel.walk} → {s.to} · {s.minutes} {t.common.minutesShort}
                             </span>
                           ) : (
                             <>
@@ -103,7 +103,7 @@ function Planner() {
                               </button>
                               <span>→ {s.towards}</span>
                               <span className="tnum">
-                                · {s.stops} {t.travel.stops} · {s.minutes} {t.common.minutesShort}
+                                · {s.stops} {s.stops === 1 ? t.travel.stop : t.travel.stops} · {s.minutes} {t.common.minutesShort}
                               </span>
                             </>
                           )}

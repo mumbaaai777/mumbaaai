@@ -163,7 +163,7 @@ function supabaseSource(client: SupabaseClient): DataSource {
     },
     async insert<T>(table: TableName, row: Partial<T>) {
       // listener_reports: anon users can insert but not read back pending rows, so skip `select()`.
-      if (table === 'listener_reports' || table === 'dedications' || table === 'business_listings') {
+      if (table === 'listener_reports' || table === 'dedications' || table === 'business_listings' || table === 'jobs') {
         const { error } = await client.from(table).insert(row as Row);
         if (error) throw error;
         return row as T;
